@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: ClearClass single Sydney stack — M0 packaging spike, expanded by later milestones
+Parameters:
+  BedrockModelId:
+    Type: String
+    Default: amazon.nova-micro-v1:0
+    AllowedValues:
+      - amazon.nova-micro-v1:0
+Resources:
+  SpikeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-spike'
+      CodeUri: ../backend/
+      Handler: src.spike.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 25
+      ReservedConcurrentExecutions: 1
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: InvokeOnlySydneyModel
+              Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource: !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/${BedrockModelId}'
+  SpikeLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${AWS::StackName}-spike'
+      RetentionInDays: 7
+Outputs:
+  SpikeFunctionName:
+    Value: !Ref SpikeFunction

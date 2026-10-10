@@ -1,0 +1,2 @@
+# Local smoke client using the AWS login profile; not packaged into Lambda.
+botocore[crt]>=1.43,<2

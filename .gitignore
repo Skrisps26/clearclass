@@ -1,0 +1,33 @@
+# Credentials and local tool configuration
+.env
+.env.*
+!.env.example
+.mcp.json
+.aws/
+.aws-sam/
+cdk.out/
+*.pem
+*.key
+secrets/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+
+# JavaScript / static output
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/

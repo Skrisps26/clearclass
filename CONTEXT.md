@@ -34,7 +34,7 @@ Code/file presence or planned architecture alone never qualifies as `verified`.
 | M5 Strands chat | `not_started` | Bounded bilingual chat grounded in the same school/location/time/card; caps and failure paths proven. | No agent or Bedrock invocation verified. |
 | M6 P1 editor/scheduler/rooms | `not_started` (conditional after P0) | Protected pack-aware editor, school-local scheduling and classroom configuration. | No P1 work exists. |
 | M7 P2 observability/CADR | `not_started` (conditional after P1) | Optional sourced work only after P0/P1/submission readiness. | No P2 work exists. |
-| M8 Submission | `not_started` | Clean-browser deployed smoke, actual README/demo/blog artifacts, public URLs and resource/cost handoff. | Public repository exists but no code pushed, no app URL, video or blog evidence. |
+| M8 Submission | `not_started` | Clean-browser deployed smoke, actual README/demo/blog artifacts, public URLs and resource/cost handoff. | Public repo has tested M0 code only; no public application URL, video or blog. |
 
 ## Historical setup evidence — not current verification
 
@@ -74,7 +74,7 @@ Sources: [Open-Meteo geocoding](https://open-meteo.com/en/docs/geocoding-api), [
 
 | Gate | Current status | Required evidence/action |
 | --- | --- | --- |
-| Git repository/remote/owner | `public destination created; no local Git` | User authorized creation; `gh repo create Skrisps26/clearclass --public` returned https://github.com/Skrisps26/clearclass on 2026-10-10. No local git init, commit, remote or push yet; inspect staged files/secrets before first tested milestone commit. |
+| Git repository/remote/owner | `public main pushed` | User authorized https://github.com/Skrisps26/clearclass; tested M0 source committed `c81a617bad57c12158017529749b4a19230412e5` and pushed to `main` 2026-10-10 after staged-file/secret scan. `CLAUDE.md` and `.mcp.json` deliberately excluded from public commit. |
 | Exact event deadline/timezone | `unknown` | [Official rules](https://www.wemakedevs.org/aws/rules) require submission before deadline on event page/form; its clock time/timezone did not appear in accessible page text. Video must be uploaded to YouTube, public/unlisted, under three minutes; public repo and short writeup required. |
 | Current AWS credentials/service permissions | `partially verified` | STS succeeded 2026-10-10; specific CloudFormation/Lambda/Bedrock invoke/IAM permissions unproven. |
 | Current skill discovery/MCP connection | `partially verified` | Locally installed skills read; OMP MCP tools are not exposed in this session, so CLI plus official skills/docs is the documented fallback. Config alone is not connection evidence. |
@@ -134,7 +134,7 @@ Partial read-only inventory checked 2026-10-10: CloudFormation stacks, Lambda fu
 - **Observed model:** Strands `BedrockModel` with `amazon.nova-micro-v1:0`, `ap-southeast-2`, max_tokens 64, non-streaming; one explicit billable smoke call. Preferred Claude regional path unavailable without profile routing beyond Sydney; user approved working alternative.
 - **Resources:** `clearclass` CloudFormation status `CREATE_COMPLETE` with Lambda `clearclass-spike` and no public URL. Managed SAM artifact bucket `aws-sam-cli-managed-default-samclisourcebucket-zy8sytzlsrsu`. Initial inventory was empty for selected services; post-deploy stack resources list has Lambda, IAM role and log group. Avoid deleting resources without user approval.
 - **Credits/spend:** Free plan returned $100 remaining at 2026-10-10T21:26Z, unchanged shortly after deployment; actual spend unknown due billing lag. User waived budget/spend-limit prerequisite but requested bounded usage; $5 review target retained.
-- **Git:** public empty repository https://github.com/Skrisps26/clearclass created; no commit/push at time of this entry. Next: secret-scan and push tested M0 slice, then implement M1 global place/air path.
+- **Git:** first commit `c81a617bad57c12158017529749b4a19230412e5` (“Prove Cedar and Strands in Sydney Lambda”) pushed to `main` at https://github.com/Skrisps26/clearclass. Before commit, staged filenames were inspected, staged content scanned for private keys, AWS/GitHub tokens and project identifier with no findings; `git diff --cached --check` returned 0. `CLAUDE.md` and `.mcp.json` were not staged. Next: M1 global place/air path.
 
 ## Update protocol
 

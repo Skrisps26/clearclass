@@ -83,9 +83,11 @@ Resources:
         AllowMethods:
           - GET
           - POST
+          - PUT
           - OPTIONS
         AllowHeaders:
           - content-type
+          - authorization
   BriefFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -216,6 +218,64 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Sub '/aws/lambda/${AWS::StackName}-chat'
+      RetentionInDays: 7
+  PolicyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-policy'
+      CodeUri: ../backend/
+      Handler: src.handlers.policy.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 20
+      ReservedConcurrentExecutions: 2
+      Layers:
+        - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:clearclass-cedar-runtime:1'
+      Environment:
+        Variables:
+          SNAPSHOT_BUCKET: !Ref SnapshotBucket
+          PYTHONPATH: /var/task:/opt
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: ReadWritePolicyPacks
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource:
+                - !Sub '${SnapshotBucket.Arn}/policies/reference-school-activity/*'
+            - Sid: ListPolicyBucket
+              Effect: Allow
+              Action: s3:ListBucket
+              Resource: !GetAtt SnapshotBucket.Arn
+      Events:
+        GetPolicy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /policy
+            Method: GET
+        ValidatePolicy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /policy/validate
+            Method: POST
+        PutPolicy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /policy
+            Method: PUT
+    Metadata:
+      BuildMethod: makefile
+  PolicyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${AWS::StackName}-policy'
       RetentionInDays: 7
   BriefLogGroup:
     Type: AWS::Logs::LogGroup

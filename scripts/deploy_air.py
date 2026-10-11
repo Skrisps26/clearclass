@@ -70,6 +70,8 @@ def main():
     template["Resources"]["BriefFunction"]["Properties"]["CodeUri"] = f"s3://{bucket}/{key}"
     if "ChatFunction" in template["Resources"]:
         template["Resources"]["ChatFunction"]["Properties"]["CodeUri"] = f"s3://{bucket}/{key}"
+    if "PolicyFunction" in template["Resources"]:
+        template["Resources"]["PolicyFunction"]["Properties"]["CodeUri"] = f"s3://{bucket}/{key}"
     packaged = ROOT / ".aws-sam/packaged.yaml"
     packaged.write_text(yaml.safe_dump(template, sort_keys=False))
     subprocess.run(

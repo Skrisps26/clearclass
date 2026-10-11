@@ -99,6 +99,7 @@ Partial selected-service pre-deployment inventory checked 2026-10-10: CloudForma
 | --- | --- | --- | --- | --- | --- |
 | `clearclass` | `ap-southeast-2` | Lambda `clearclass-spike`, `clearclass-brief`, `clearclass-chat`, `clearclass-policy`, HTTP API, private versioned cache S3 bucket, DynamoDB tables (`CounterTable`, `CardTable`), Lambda layer `clearclass-cedar-runtime:1`, IAM roles, 7-day log groups | https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com | `UPDATE_COMPLETE`; all P0 + P1 policy routes verified: four-place M3 brief, 16 scenarios, Cedar verdicts, ventilation, bilingual parent messages, Strands Bedrock chat, and protected policy management | 2026-10-12T01:15Z |
 | SAM-managed artifact stack | `ap-southeast-2` | bucket `aws-sam-cli-managed-default-samclisourcebucket-zy8sytzlsrsu` | internal only | Retained for reproducible deploys | 2026-10-11 |
+| AWS Amplify App | `ap-southeast-2` | app `d3njtglhf8ccp` (branch `main`) | https://main.d3njtglhf8ccp.amplifyapp.com | `SUCCEED`; verified live in headless Chromium with live brief, Hindi toggle, scenario deep-links, and mobile viewport | 2026-10-12T01:38Z |
 
 | Timestamp | Source | Spend so far | Credits remaining | Billing lag / caveat |
 | --- | --- | --- | --- | --- |

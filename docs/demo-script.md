@@ -8,7 +8,7 @@
 
 ## Visual Setup Checklist Before Recording
 
-1. Open clean Chrome browser tab at the deployed frontend (`http://127.0.0.1:3000/` or public CloudFront/Amplify URL).
+1. Open clean Chrome browser tab at the live deployed frontend: `https://main.d3njtglhf8ccp.amplifyapp.com`.
 2. Set screen resolution to 1920x1080 (100% zoom).
 3. Have terminal or AWS Console ready in a secondary tab showing the deployed Sydney CloudFormation stack `clearclass` (`ap-southeast-2`).
 

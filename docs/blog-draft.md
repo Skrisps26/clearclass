@@ -216,4 +216,5 @@ Boto3's DynamoDB serializer strictly prohibits Python `float` types. Instead of 
 ClearClass demonstrates how AI and formal verification can work hand-in-hand. By grounding generative AI in formal Cedar policies and physics-based differential equations, we can give educators the certainty, speed, and transparency they need to keep students safe.
 
 - **GitHub Repository:** [https://github.com/Skrisps26/clearclass](https://github.com/Skrisps26/clearclass)
+- **Live Web Application (AWS Amplify):** [https://main.d3njtglhf8ccp.amplifyapp.com](https://main.d3njtglhf8ccp.amplifyapp.com)
 - **Live Sydney API:** `https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com`

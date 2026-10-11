@@ -5,7 +5,8 @@
 
 Built for **Environmental Hacks (Bharat Builds Tour 2026), Track 01 Air**.
 Deployed in **AWS Sydney (`ap-southeast-2`)**.
-Live Production API: `https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com`
+- **Live Web Application (AWS Amplify):** [https://main.d3njtglhf8ccp.amplifyapp.com](https://main.d3njtglhf8ccp.amplifyapp.com)
+- **Live Production API (Amazon API Gateway):** `https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com`
 
 ---
 

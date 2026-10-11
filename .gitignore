@@ -25,6 +25,8 @@ node_modules/
 .next/
 out/
 coverage/
+frontend/out.zip
+*.zip
 *.tsbuildinfo
 
 # OS/editor

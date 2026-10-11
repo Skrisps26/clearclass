@@ -11,8 +11,8 @@ import {
   BookOpen,
   ExternalLink,
   Info,
-  ShieldCheck,
-  Calendar,
+  Shield,
+  Activity,
 } from "lucide-react";
 import { Verdict, EvidenceSource } from "../types/card";
 
@@ -74,7 +74,7 @@ export function ActivityTab({
   const getDecisionBadge = (decision: string, status: string) => {
     if (status !== "evaluated") {
       return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-300">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-100 text-slate-700 border border-slate-200">
           <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
           {language === "hi" ? "सलाह अनुपलब्ध" : "WITHHELD"}
         </span>
@@ -83,22 +83,22 @@ export function ActivityTab({
     switch (decision) {
       case "allow":
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
             {language === "hi" ? "अनुमति (ALLOW)" : "ALLOW"}
           </span>
         );
       case "modify":
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200">
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
             {language === "hi" ? "संशोधित करें (MODIFY)" : "MODIFY"}
           </span>
         );
       case "deny":
         return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-rose-100 text-rose-900 border border-rose-300">
-            <XCircle className="w-3.5 h-3.5 text-rose-700" />
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-50 text-rose-800 border border-rose-200">
+            <XCircle className="w-3.5 h-3.5 text-rose-600" />
             {language === "hi" ? "अस्वीकृत (DENY)" : "DENY"}
           </span>
         );
@@ -108,7 +108,7 @@ export function ActivityTab({
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in-50 duration-200">
+    <div className="space-y-4 animate-in fade-in-50 duration-200">
       {/* Activity Grid (2x2 on desktop, 1 col on mobile) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {cohortVerdicts.map((v) => {
@@ -124,13 +124,13 @@ export function ActivityTab({
           return (
             <div
               key={itemKey}
-              className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:border-slate-300 transition-all p-5 flex flex-col justify-between"
+              className="bg-white rounded-2xl border border-slate-200/90 shadow-card hover:shadow-card-hover transition-all p-5 flex flex-col justify-between"
             >
               <div>
                 {/* Card Top: Activity Name + Decision Badge */}
-                <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-100">
+                <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">
+                    <h3 className="text-base font-bold text-slate-900 tracking-tight">
                       {language === "hi" ? meta.hi : meta.en}
                     </h3>
                     <p className="text-xs text-slate-500 font-medium mt-0.5">
@@ -141,8 +141,8 @@ export function ActivityTab({
                 </div>
 
                 {/* Primary Directive */}
-                <div className="py-3">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                <div className="py-3.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1 font-mono">
                     {language === "hi" ? "कार्यकारी निर्देश" : "Operational Instruction"}
                   </span>
 
@@ -162,7 +162,7 @@ export function ActivityTab({
                         : v.selectedAction === "sport_with_breaks_reduced_intensity" ||
                           v.selectedAction === "ordinary_with_breaks_reduced_intensity"
                         ? language === "hi"
-                          ? "अधिक विराम दें और गतिविधि की तीव्रता कम रखें।"
+                          ? "अधिक विराम दें और शारीरिक गतिविधि की तीव्रता कम रखें।"
                           : "Take frequent rest breaks and reduce physical intensity."
                         : language === "hi"
                         ? "नियमित रूप से बाहर संचालित कर सकते हैं।"
@@ -174,12 +174,12 @@ export function ActivityTab({
                 {/* Modifications List */}
                 {v.modifications && v.modifications.length > 0 && (
                   <div className="pb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 block mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 block mb-1.5 font-mono">
                       {language === "hi" ? "लागू होने वाले बदलाव" : "Required Modifications"}
                     </span>
-                    <ul className="text-xs text-slate-700 space-y-1">
+                    <ul className="text-xs text-slate-700 space-y-1.5 bg-amber-50/50 p-2.5 rounded-xl border border-amber-200/60">
                       {v.modifications.map((m, idx) => (
-                        <li key={idx} className="flex items-center gap-2 font-medium">
+                        <li key={idx} className="flex items-center gap-2 font-medium text-amber-950">
                           <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
                           <span>{m}</span>
                         </li>
@@ -190,14 +190,14 @@ export function ActivityTab({
 
                 {/* Caveats */}
                 {v.sensitivePupilCaveat && (
-                  <div className="mb-3 p-2.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs text-amber-900 flex items-start gap-2 font-medium">
+                  <div className="mb-3 p-3 rounded-xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-950 flex items-start gap-2 font-medium">
                     <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                     <span>{v.sensitivePupilCaveat}</span>
                   </div>
                 )}
 
                 {v.indoorAirCaveat && (
-                  <div className="mb-3 p-2.5 rounded-xl bg-blue-50/80 border border-blue-200 text-xs text-blue-900 flex items-start gap-2 font-medium">
+                  <div className="mb-3 p-3 rounded-xl bg-blue-50/80 border border-blue-200/80 text-xs text-blue-950 flex items-start gap-2 font-medium">
                     <Info className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
                     <span>{v.indoorAirCaveat}</span>
                   </div>
@@ -208,7 +208,7 @@ export function ActivityTab({
               <div className="pt-3 border-t border-slate-100">
                 <button
                   onClick={() => toggleWhy(itemKey)}
-                  className="w-full flex items-center justify-between text-xs font-bold text-blue-900 hover:text-blue-950 py-1"
+                  className="w-full flex items-center justify-between text-xs font-semibold text-blue-900 hover:text-blue-950 py-1 transition-colors"
                 >
                   <span className="flex items-center gap-1.5">
                     <BookOpen className="w-3.5 h-3.5 text-blue-700" />
@@ -225,21 +225,27 @@ export function ActivityTab({
                   {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </button>
 
-                {/* Collapsible Why Panel */}
+                {/* Collapsible Why Panel with Dark Syntax Block */}
                 {isExpanded && (
-                  <div className="mt-2.5 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2.5 animate-in fade-in-50 duration-150">
+                  <div className="mt-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-3 animate-in fade-in-50 duration-150">
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 block font-mono">
                         Evaluating Cedar Rule `@id`
                       </span>
                       {v.ruleIds && v.ruleIds.length > 0 ? (
                         v.ruleIds.map((rid) => (
-                          <code
+                          <div
                             key={rid}
-                            className="text-[11px] font-mono bg-white px-2.5 py-1 rounded-md border border-slate-200 text-blue-900 block mt-1 font-semibold"
+                            className="bg-slate-950 text-slate-100 p-3 rounded-xl border border-slate-800 font-mono text-[11px] mt-1.5 overflow-x-auto shadow-inner"
                           >
-                            {rid}
-                          </code>
+                            <span className="text-amber-400">@id</span>
+                            <span className="text-slate-400">(</span>
+                            <span className="text-emerald-400">"{rid}"</span>
+                            <span className="text-slate-400">)</span>
+                            <br />
+                            <span className="text-blue-400">{v.decision === "allow" ? "permit" : v.decision === "modify" ? "permit" : "forbid"}</span>
+                            <span className="text-slate-300"> (principal, action, resource);</span>
+                          </div>
                         ))
                       ) : (
                         <span className="text-slate-500 italic text-[11px] block mt-0.5">
@@ -250,7 +256,7 @@ export function ActivityTab({
 
                     {v.sources && v.sources.length > 0 && (
                       <div>
-                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block mb-1 font-mono">
                           Cited Authority Source
                         </span>
                         <div className="space-y-1">

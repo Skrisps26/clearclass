@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, MapPin, X, Loader2, Sparkles } from "lucide-react";
+import { Search, MapPin, X, Loader2, Sparkles, Building2 } from "lucide-react";
 import { CardLocation } from "../types/card";
 import { searchLocations } from "../lib/api";
 
@@ -114,22 +114,22 @@ export function LocationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in-50 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md animate-in fade-in-50 duration-150">
       <div
-        className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-lg bg-white rounded-2xl shadow-popover border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
           <div>
             <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-blue-700" />
               {language === "hi" ? "अपना स्कूल स्थान चुनें" : "Select Your School Location"}
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 font-medium mt-0.5">
               {language === "hi"
                 ? "स्थान खोजें या त्वरित चयन के लिए किसी शहर पर क्लिक करें"
-                : "Type any city worldwide or click a quick-select city below"}
+                : "Search any global city or pick a quick city below"}
             </p>
           </div>
           <button
@@ -154,7 +154,7 @@ export function LocationModal({
                   ? "शहर या ज़िले का नाम लिखें (उदा. Delhi, Mumbai, London)..."
                   : "Search city or area (e.g., Delhi, Mumbai, London)..."
               }
-              className="w-full pl-10 pr-10 py-2.5 text-sm rounded-xl border border-slate-300 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 transition-all text-slate-900 placeholder:text-slate-400 font-medium"
+              className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-300 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-2xs"
             />
             {searching && (
               <Loader2 className="w-4 h-4 text-blue-800 animate-spin absolute right-3.5 top-1/2 -translate-y-1/2" />
@@ -163,7 +163,7 @@ export function LocationModal({
 
           {/* Quick Select Cities */}
           <div className="mt-3.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2 font-mono">
               {language === "hi" ? "त्वरित चयन (Quick Cities)" : "Quick Cities"}
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -176,14 +176,14 @@ export function LocationModal({
                       onSelectLocation(city);
                       onClose();
                     }}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-2xs ${
                       isSelected
                         ? "bg-blue-900 text-white shadow-xs"
-                        : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200/80"
+                        : "bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200"
                     }`}
                   >
                     <span>{city.name}</span>
-                    <span className="text-[10px] opacity-70">({city.countryCode})</span>
+                    <span className="text-[10px] opacity-70 font-mono">({city.countryCode})</span>
                   </button>
                 );
               })}
@@ -208,11 +208,11 @@ export function LocationModal({
                 onSelectLocation(place);
                 onClose();
               }}
-              className="w-full px-3 py-2.5 rounded-lg text-left hover:bg-slate-50 flex items-center justify-between transition-colors group"
+              className="w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors group"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0 group-hover:bg-blue-100">
-                  <MapPin className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
+                  <MapPin className="w-4 h-4" />
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-900">{place.name}</p>
@@ -221,7 +221,7 @@ export function LocationModal({
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
                 {place.timezone}
               </span>
             </button>

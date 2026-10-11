@@ -32,17 +32,17 @@ export function ParentNoticeTab({
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in-50 duration-200">
+    <div className="space-y-4 animate-in fade-in-50 duration-200">
       {/* Intro Header */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-card">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-indigo-900 text-white flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-indigo-900 text-white flex items-center justify-center shrink-0 shadow-xs">
             <MessageSquare className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+            <h2 className="text-base font-bold text-slate-900 tracking-tight">
               {language === "hi"
-                ? "अभिभावक संदेश (प्रसारण हेतु तैयार)"
+                ? "अभिभावक सूचना (प्रसारण हेतु तैयार)"
                 : "Ready-to-Broadcast Parent Circulars"}
             </h2>
             <p className="text-xs text-slate-500 font-medium mt-0.5">
@@ -55,20 +55,20 @@ export function ParentNoticeTab({
       </div>
 
       {/* Side-by-Side Cards on Desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* English Circular */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
-                  Language Format
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block font-mono">
+                  Format
                 </span>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900 tracking-tight">
                   English Notice (WhatsApp / Circular)
                 </h3>
               </div>
-              <span className="text-[10px] uppercase font-mono font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+              <span className="text-[10px] uppercase font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
                 EN
               </span>
             </div>
@@ -78,7 +78,7 @@ export function ParentNoticeTab({
             </div>
           </div>
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-2.5 pt-1">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => copyToClipboard(parentMessage.en, "en")}
@@ -105,7 +105,7 @@ export function ParentNoticeTab({
                 href={getWhatsAppShareUrl(parentMessage.en)}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors"
+                className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors shadow-2xs"
                 title="Share via WhatsApp"
               >
                 <Share2 className="w-4 h-4" />
@@ -119,18 +119,18 @@ export function ParentNoticeTab({
         </div>
 
         {/* Hindi Circular */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block font-mono">
                   भाषा प्रारूप
                 </span>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-slate-900 tracking-tight">
                   हिन्दी नोटिस (WhatsApp / स्कूल सूचना)
                 </h3>
               </div>
-              <span className="text-[10px] uppercase font-mono font-bold bg-amber-50 text-amber-800 px-2 py-0.5 rounded border border-amber-200">
+              <span className="text-[10px] uppercase font-mono font-bold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-md border border-amber-200">
                 देवनागरी
               </span>
             </div>
@@ -140,7 +140,7 @@ export function ParentNoticeTab({
             </div>
           </div>
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-2.5 pt-1">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => copyToClipboard(parentMessage.hi, "hi")}
@@ -167,7 +167,7 @@ export function ParentNoticeTab({
                 href={getWhatsAppShareUrl(parentMessage.hi)}
                 target="_blank"
                 rel="noreferrer"
-                className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors"
+                className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-900 transition-colors shadow-2xs"
                 title="WhatsApp पर भेजें"
               >
                 <Share2 className="w-4 h-4" />
@@ -182,7 +182,7 @@ export function ParentNoticeTab({
       </div>
 
       {/* Compliance & Disclosure Footnote */}
-      <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-start gap-3">
+      <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-card flex items-start gap-3">
         <Info className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
         <p className="text-xs text-slate-600 leading-relaxed font-medium">
           <strong>Broadcasting Guidance:</strong> These notices are derived deterministically from U.S. EPA AirNow school activity recommendations. They inform parents of school-level activity modifications and classroom airing. Official state directives (such as CAQM GRAP in Delhi-NCR) are evaluated independently by local authorities.

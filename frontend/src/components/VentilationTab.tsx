@@ -92,11 +92,13 @@ export function VentilationTab({
               <Wind className="w-5 h-5" />
             </div>
             <div>
-              <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
-                {language === "hi"
-                  ? "कक्षा संवातन (Ventilation) रणनीति"
-                  : "Classroom Airing & Ventilation Schedule"}
-              </CardTitle>
+              <h3>
+                <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
+                  {language === "hi"
+                    ? "कक्षा संवातन (Ventilation) रणनीति"
+                    : "Classroom Airing & Ventilation Schedule"}
+                </CardTitle>
+              </h3>
               <CardDescription className="text-xs text-muted-foreground font-medium mt-0.5">
                 {language === "hi"
                   ? "भीतरी CO₂ जमाव को कम करते हुए PM2.5 जोखिम को न्यूनतम रखने का गणितीय मॉडल"
@@ -282,11 +284,13 @@ export function VentilationTab({
         <Card className="rounded-2xl border border-border shadow-card">
           <CardHeader className="p-5 pb-3 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 space-y-0">
             <div>
-              <CardTitle className="text-base font-bold text-card-foreground">
-                {language === "hi"
-                  ? "प्रति घंटा वायु गुणवत्ता पूर्वानुमान"
-                  : "Hourly Forecast & Ambient Trends"}
-              </CardTitle>
+              <h3>
+                <CardTitle className="text-base font-bold text-card-foreground">
+                  {language === "hi"
+                    ? "प्रति घंटा वायु गुणवत्ता पूर्वानुमान"
+                    : "Hourly Forecast & Ambient Trends"}
+                </CardTitle>
+              </h3>
               <CardDescription className="text-xs text-muted-foreground font-medium">
                 {language === "hi"
                   ? "Copernicus CAMS Global मॉडल का 48-घंटे का वायु पूर्वानुमान"

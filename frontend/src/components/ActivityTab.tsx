@@ -130,9 +130,11 @@ export function ActivityTab({
                 {/* Card Header: Activity Name + Decision Badge */}
                 <CardHeader className="p-5 pb-3.5 border-b border-border flex flex-row items-start justify-between space-y-0 gap-3">
                   <div>
-                    <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
-                      {language === "hi" ? meta.hi : meta.en}
-                    </CardTitle>
+                    <h3>
+                      <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
+                        {language === "hi" ? meta.hi : meta.en}
+                      </CardTitle>
+                    </h3>
                     <CardDescription className="text-xs text-muted-foreground font-medium mt-0.5">
                       {language === "hi" ? meta.descHi : meta.descEn}
                     </CardDescription>

@@ -99,9 +99,11 @@ export function AssistantTab({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
-                {language === "hi" ? "ClearClass सहायक" : "ClearClass Conversational Assistant"}
-              </CardTitle>
+              <h3>
+                <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
+                  {language === "hi" ? "ClearClass सहायक" : "ClearClass Conversational Assistant"}
+                </CardTitle>
+              </h3>
               <Badge variant="outline" className="text-[10px] font-bold bg-blue-50 text-blue-900 border-blue-200 font-mono">
                 Sydney Bedrock Nova Micro
               </Badge>

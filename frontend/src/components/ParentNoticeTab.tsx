@@ -73,9 +73,11 @@ export function ParentNoticeTab({
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block font-mono">
                   Format
                 </span>
-                <CardTitle className="text-sm font-bold text-card-foreground tracking-tight">
-                  English Notice (WhatsApp / Circular)
-                </CardTitle>
+                <h3>
+                  <CardTitle className="text-sm font-bold text-card-foreground tracking-tight">
+                    English Notice (WhatsApp / Circular)
+                  </CardTitle>
+                </h3>
               </div>
               <Badge variant="secondary" className="font-mono font-bold text-[10px]">
                 EN
@@ -142,9 +144,11 @@ export function ParentNoticeTab({
                 <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground block font-mono">
                   भाषा प्रारूप
                 </span>
-                <CardTitle className="text-sm font-bold text-card-foreground tracking-tight">
-                  हिन्दी नोटिस (WhatsApp / स्कूल सूचना)
-                </CardTitle>
+                <h3>
+                  <CardTitle className="text-sm font-bold text-card-foreground tracking-tight">
+                    हिन्दी नोटिस (WhatsApp / स्कूल सूचना)
+                  </CardTitle>
+                </h3>
               </div>
               <Badge variant="outline" className="font-mono font-bold text-[10px] bg-amber-50 text-amber-800 border-amber-200">
                 देवनागरी

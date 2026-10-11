@@ -1,0 +1,48 @@
+entity Staff;
+entity Cohort;
+entity School;
+
+action ordinary_outdoor appliesTo {
+    principal: Staff,
+    resource: School,
+    context: {
+        aqi: Long,
+        cohort: Cohort
+    }
+};
+
+action prolonged_intense_sport appliesTo {
+    principal: Staff,
+    resource: School,
+    context: {
+        aqi: Long,
+        cohort: Cohort
+    }
+};
+
+action ordinary_with_breaks_reduced_intensity appliesTo {
+    principal: Staff,
+    resource: School,
+    context: {
+        aqi: Long,
+        cohort: Cohort
+    }
+};
+
+action sport_with_breaks_reduced_intensity appliesTo {
+    principal: Staff,
+    resource: School,
+    context: {
+        aqi: Long,
+        cohort: Cohort
+    }
+};
+
+action indoor_relocation_or_reschedule appliesTo {
+    principal: Staff,
+    resource: School,
+    context: {
+        aqi: Long,
+        cohort: Cohort
+    }
+};

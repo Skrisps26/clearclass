@@ -1,0 +1,49 @@
+{
+  "packId": "reference-school-activity",
+  "version": "2026-10-11.1",
+  "basis": "reference_advisory",
+  "jurisdiction": "Global project reference adaptation; not a local-authority policy or legal clearance.",
+  "active": true,
+  "expectedAqiScheme": "US_AQI",
+  "schema": "schema.cedarschema",
+  "policies": "policies.cedar",
+  "sources": [
+    {
+      "id": "epa-airnow-school-guide",
+      "publisher": "U.S. Environmental Protection Agency / AirNow",
+      "title": "Air Quality and Outdoor Activity Guidance for Schools",
+      "url": "https://document.airnow.gov/air-quality-and-outdoor-guidance-for-schools.pdf",
+      "issued": "2014-08",
+      "accessed": "2026-10-11",
+      "pages": "1-2",
+      "classification": "reference_advisory",
+      "notes": "Page 1 gives category actions; page 2 says there is no exact outdoor duration."
+    },
+    {
+      "id": "airnow-aqi-basics",
+      "publisher": "U.S. Environmental Protection Agency / AirNow",
+      "title": "AQI Basics",
+      "url": "https://www.airnow.gov/aqi/aqi-basics/",
+      "issued": null,
+      "accessed": "2026-10-11",
+      "pages": null,
+      "classification": "reference_aqi_scheme",
+      "notes": "Defines U.S. AQI categories: Good 0-50, Moderate 51-100, Unhealthy for Sensitive Groups 101-150, Unhealthy 151-200, and Very Unhealthy 201-300."
+    }
+  ],
+  "policySources": {
+    "reference-school-activity.allow-ordinary-through-usg": ["epa-airnow-school-guide", "airnow-aqi-basics"],
+    "reference-school-activity.allow-sport-through-moderate": ["epa-airnow-school-guide", "airnow-aqi-basics"],
+    "reference-school-activity.allow-sport-usg-modified": ["epa-airnow-school-guide", "airnow-aqi-basics"],
+    "reference-school-activity.allow-ordinary-unhealthy-modified": ["epa-airnow-school-guide", "airnow-aqi-basics"],
+    "reference-school-activity.allow-sport-unhealthy-modified": ["epa-airnow-school-guide", "airnow-aqi-basics"],
+    "reference-school-activity.forbid-outdoor-very-unhealthy": ["epa-airnow-school-guide", "airnow-aqi-basics"],
+    "reference-school-activity.allow-indoor-or-reschedule-very-unhealthy": ["epa-airnow-school-guide", "airnow-aqi-basics"]
+  },
+  "localPolicyOverlay": {
+    "packId": "in-delhi-grap",
+    "enabled": false,
+    "status": "source_verification_required",
+    "reason": "No current operative CAQM school clause, effective/revocation date, and saved-school jurisdiction evidence have been verified. This reference pack must return reference_only coverage and must not assert a local restriction or clearance."
+  }
+}

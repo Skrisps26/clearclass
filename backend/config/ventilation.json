@@ -1,0 +1,199 @@
+{
+  "modelVersion": "m2-2026-10-11",
+  "accessedAt": "2026-10-11",
+  "schoolDay": {
+    "startLocal": "08:00",
+    "endLocal": "14:30",
+    "stepMinutes": 5,
+    "context": "Project default school day. It is configurable at the school profile layer; it is not a jurisdictional requirement.",
+    "classification": "project_assumption"
+  },
+  "defaults": {
+    "occupants": {
+      "value": 30,
+      "unit": "people",
+      "classification": "project_assumption",
+      "uncertainty": "A fictional classroom occupancy used only when the caller does not supply a profile."
+    },
+    "roomVolumeM3": {
+      "value": 180.0,
+      "unit": "m3",
+      "classification": "project_assumption",
+      "uncertainty": "A fictional classroom volume used only when the caller does not supply a profile."
+    },
+    "initialPm25": {
+      "value": "first_outdoor_hourly_pm25",
+      "unit": "ug/m3",
+      "classification": "project_initial_condition",
+      "uncertainty": "An initialization convention, not an indoor observation. The caller may supply an explicit initial indoor concentration."
+    },
+    "initialCo2": {
+      "value": 426.0,
+      "unit": "ppm",
+      "classification": "project_initial_condition",
+      "uncertainty": "A global-average proxy, not a local outdoor measurement. The caller may supply an explicit initial indoor concentration."
+    }
+  },
+  "pm25": {
+    "closedAirChangesPerHour": {
+      "value": 0.5,
+      "unit": "1/hour",
+      "classification": "published_case_study_reference",
+      "availableForEstimation": false,
+      "context": "Winter, C130 mechanically ventilated classroom with windows reported closed at Estover Community College, Plymouth, UK; not a measurement of a ClearClass school.",
+      "source": {
+        "issuer": "Innovate UK Building Performance Evaluation; AECOM, University of Exeter and University of Bath",
+        "title": "Estover Community College Campus, Appendix 10.9.1",
+        "page": "Report page 153; PDF page 154",
+        "url": "https://www.usablebuildings.co.uk/UsableBuildings/Unprotected/BPEArchive/EstoverCommunityCollegeCampus.pdf",
+        "accessedAt": "2026-10-11"
+      },
+      "uncertainty": "Case-study rate cannot represent another room or climate. A real school must provide room-specific assessed airflow."
+    },
+    "openAirChangesPerHour": {
+      "value": 5.0,
+      "unit": "1/hour",
+      "classification": "published_case_study_reference",
+      "availableForEstimation": false,
+      "context": "Lower end of the 5 to 20 air changes per hour measured in winter with windows open in the same C130 classroom; comparative demo only.",
+      "source": {
+        "issuer": "Innovate UK Building Performance Evaluation; AECOM, University of Exeter and University of Bath",
+        "title": "Estover Community College Campus, Appendix 10.9.1",
+        "page": "Report page 153; PDF page 154",
+        "url": "https://www.usablebuildings.co.uk/UsableBuildings/Unprotected/BPEArchive/EstoverCommunityCollegeCampus.pdf",
+        "accessedAt": "2026-10-11"
+      },
+      "uncertainty": "The source range reflects one classroom in specific weather/building conditions. This lower-bound illustration does not predict local window performance."
+    },
+    "penetrationFactor": {
+      "value": 0.8,
+      "unit": "fraction",
+      "classification": "reference_illustrative_parameter",
+      "context": "EPA IECCU tutorial assumes 0.8 for 2.5-µm particles in a residential PM example; not a classroom penetration measurement.",
+      "source": {
+        "issuer": "U.S. Environmental Protection Agency",
+        "title": "IECCU User's Guide, version 1.1, Tutorial 7",
+        "page": "Table 7.1, report page 100 (PDF page 110)",
+        "url": "https://www.epa.gov/sites/default/files/2019-06/documents/ieccu_1.1_users_guide.pdf",
+        "accessedAt": "2026-10-11"
+      },
+      "uncertainty": "Penetration depends on particle size, building envelope and window state; 0.8 is an illustrative model input only."
+    },
+    "depositionPerHour": {
+      "value": 0.39,
+      "unit": "1/hour",
+      "classification": "reference_parameter",
+      "context": "Representative PM2.5 deposition rate in a residential exposure-factor table; used here only as an uncertain model parameter, not a classroom measurement.",
+      "source": {
+        "issuer": "U.S. Environmental Protection Agency",
+        "title": "Exposure Factors Handbook, Chapter 19: Building Characteristics",
+        "page": "Table 19-6 (PM2.5 representative deposition rate)",
+        "url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100UZMY.txt",
+        "accessedAt": "2026-10-11"
+      },
+      "uncertainty": "Deposition depends on particle size, surface, air movement, and room characteristics."
+    }
+  },
+  "co2": {
+    "generationLitresPerMinutePerPerson": {
+      "value": 0.31,
+      "unit": "L/min/person",
+      "classification": "reference_parameter",
+      "context": "ASHRAE's example for sedentary people at 1.2 met. Age, body mass, and activity change generation; it is not a child-specific measurement.",
+      "source": {
+        "issuer": "ASHRAE",
+        "title": "ANSI/ASHRAE Addendum d to Standard 62.1-2016",
+        "page": "p. 3, Informative Appendix D (example: 1.2 met sedentary persons, 0.31 L/min CO2 generation)",
+        "url": "https://www.ashrae.org/File%20Library/Technical%20Resources/Standards%20and%20Guidelines/Standards%20Addenda/62.1-2016/62_1_2016_d_20180302.pdf",
+        "accessedAt": "2026-10-11"
+      },
+      "uncertainty": "The addendum deletes this informative appendix and its calculation assumes sedentary 1.2-met people. Actual occupants' age, body mass, and activity must be supplied for a room-specific calculation."
+    },
+    "outdoorPpm": {
+      "value": 426.0,
+      "unit": "ppm",
+      "classification": "reference_parameter",
+      "context": "Global annual outdoor concentration reported for 2024; local outdoor CO2 can differ materially by place and time.",
+      "source": {
+        "issuer": "ASHRAE citing NOAA Global Monitoring Laboratory",
+        "title": "Position Document on Indoor Carbon Dioxide",
+        "page": "p. 8 (426 ppmv in 2024; daily, seasonal, urban, and local variation)",
+        "url": "https://www.ashrae.org/File%20Library/About/Position%20Documents/pd-on-indoor-carbon-dioxide-english.pdf",
+        "accessedAt": "2026-10-11"
+      },
+      "uncertainty": "A global value is a model boundary condition, not a local measurement."
+    },
+    "goodVentilationIndicatorPpm": {
+      "value": 800.0,
+      "unit": "ppm",
+      "classification": "reference_guidance",
+      "context": "England DfE operational guidance says under 800 ppm indicates good ventilation; it is not a global legal limit or direct health threshold.",
+      "source": {
+        "issuer": "UK Department for Education",
+        "title": "Ventilation and air quality in education and childcare settings",
+        "page": "Knowing what to do with your CO2 readings",
+        "url": "https://www.gov.uk/government/publications/ventilation-and-air-quality-in-education-and-childcare-settings/ventilation-and-air-quality-in-education-and-childcare-settings",
+        "accessedAt": "2026-10-11"
+      }
+    },
+    "concernPpm": {
+      "value": 1500.0,
+      "unit": "ppm",
+      "classification": "reference_guidance",
+      "context": "England DfE operational guidance says over 1500 ppm indicates poor ventilation and to increase ventilation where possible. It is used as a model feasibility indicator only, not a universal compliance or health threshold.",
+      "source": {
+        "issuer": "UK Department for Education",
+        "title": "Ventilation and air quality in education and childcare settings",
+        "page": "Knowing what to do with your CO2 readings",
+        "url": "https://www.gov.uk/government/publications/ventilation-and-air-quality-in-education-and-childcare-settings/ventilation-and-air-quality-in-education-and-childcare-settings",
+        "accessedAt": "2026-10-11"
+      }
+    }
+  },
+  "openingPolicy": {
+    "allowOpening": true,
+    "flushDurationMinutes": 10,
+    "flushIntervalMinutes": 60,
+    "candidatePhasesMinutes": [0, 10, 20, 30, 40, 50],
+    "classification": "project_policy_reference",
+    "context": "A bounded search of a closed schedule and six hourly 10-minute flush schedules. An applicable local school policy may set allowOpening false; this model does not infer that opening is safe in a particular room or outdoor-air episode.",
+    "source": {
+      "issuer": "UK Department for Education",
+      "title": "Ventilation and air quality in education and childcare settings",
+      "page": "Making sure there is enough ventilation (example: open windows and doors for 10 minutes an hour during lesson breaks)",
+      "url": "https://www.gov.uk/government/publications/ventilation-and-air-quality-in-education-and-childcare-settings/ventilation-and-air-quality-in-education-and-childcare-settings",
+      "accessedAt": "2026-10-11"
+    },
+    "uncertainty": "DfE guidance applies to England. The schedule is a project search bound, not a rule for every school or a substitute for local safety, fire, temperature, accessibility, or air-quality decisions."
+  },
+  "methodSources": [
+    {
+      "issuer": "U.S. Environmental Protection Agency",
+      "title": "Indoor Air Quality Model for Particulate Matter",
+      "page": "2001, pp. 1–18 (indoor PM mass balance includes outdoor concentration, air-exchange rate, penetration, deposition, and indoor sources)",
+      "url": "https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100LTIP.TXT",
+      "accessedAt": "2026-10-11"
+    },
+    {
+      "issuer": "CDC/NIOSH",
+      "title": "Ventilation FAQs Frequently Asked Questions",
+      "page": "FAQ 3 (CO2 can indicate ventilation but does not directly predict infection risk); FAQ 7 (ACH definition and imperfect-mixing caveat)",
+      "url": "https://www.cdc.gov/niosh/ventilation/faq/index.html",
+      "accessedAt": "2026-10-11"
+    },
+    {
+      "issuer": "CDC/NIOSH",
+      "title": "Ventilation in Schools and Childcare Programs",
+      "page": "Bring in outdoor air (open windows and doors only when safe); Check HVAC settings",
+      "url": "https://www.cdc.gov/niosh/ventilation/guidelines/index.html",
+      "accessedAt": "2026-10-11"
+    }
+  ],
+  "limitations": [
+    "Estimated from a single-zone, well-mixed model; not measured.",
+    "CO2 is a ventilation indicator, not a complete IAQ, infection-risk, or health-safety measure.",
+    "The optional reference-case airflow rates are from one 2014 UK classroom, not measured at the selected school or transferable as a safety guarantee.",
+    "The model excludes indoor PM sources, filtration, outdoor CO2 variation, interzonal flow, weather, and room-specific airflow measurements.",
+    "Reference guidance is not a local legal requirement or a claim of compliance."
+  ]
+}

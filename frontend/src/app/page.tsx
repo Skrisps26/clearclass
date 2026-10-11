@@ -12,6 +12,7 @@ import { AssistantTab } from "../components/AssistantTab";
 import { fetchBrief } from "../lib/api";
 import { DailyCard, CardLocation } from "../types/card";
 import { Loader2, AlertCircle, RefreshCw, ExternalLink } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const DEFAULT_SCHOOL = "delhi-demo";
 
@@ -148,8 +149,12 @@ function ClearClassApp() {
     updateUrl(activeTab, selectedLocation?.id, selectedLocation?.name, selectedScenario, lng);
   };
 
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
+
   return (
-    <div className="min-h-screen bg-slate-100/70 text-slate-900 flex flex-col font-sans overflow-x-hidden w-full max-w-full">
+    <div className="flex min-h-screen w-full flex-col bg-background font-sans text-foreground">
       {/* Location Modal */}
       <LocationModal
         isOpen={locationModalOpen}
@@ -176,38 +181,32 @@ function ClearClassApp() {
         loading={loading}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="mx-auto w-full max-w-6xl flex-1 space-y-5 px-4 py-5 sm:px-6 sm:py-7">
         {loading && !card ? (
-          <div className="py-24 flex flex-col items-center justify-center text-center space-y-3">
-            <Loader2 className="w-8 h-8 text-blue-900 animate-spin" />
-            <p className="text-xs font-bold text-slate-600">
-              {language === "hi"
-                ? "मौसम, वायु और Cedar नीतियों का मूल्यांकन हो रहा है..."
-                : "Evaluating forecasts, physical models, and Cedar policies..."}
+          <div role="status" className="border-y bg-card py-12 text-center">
+            <p className="text-base font-medium">
+              {language === "hi" ? "आज की स्कूल सलाह तैयार की जा रही है" : "Preparing today's school brief"}
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {language === "hi" ? "पूर्वानुमान और Cedar नीतियों की जाँच जारी है।" : "Checking the forecast and Cedar policies."}
             </p>
           </div>
         ) : error && !card ? (
-          <div className="p-8 rounded-2xl bg-white border border-rose-200 shadow-xs max-w-md mx-auto text-center space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
-              <AlertCircle className="w-6 h-6" />
+          <section role="alert" className="border-y bg-card py-8">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-status-deny-foreground" aria-hidden="true" />
+              <div>
+                <h1 className="text-xl font-semibold">{language === "hi" ? "स्कूल की सलाह लोड नहीं हो सकी" : "School brief could not be loaded"}</h1>
+                <p className="mt-1 break-words text-sm text-muted-foreground">{error}</p>
+                <Button onClick={loadBrief} className="mt-5 gap-2 shadow-none">
+                  <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                  {language === "hi" ? "पुनः प्रयास करें" : "Retry"}
+                </Button>
+              </div>
             </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-900">
-                {language === "hi" ? "डेटा लोड करने में त्रुटि" : "Error Loading Brief"}
-              </h3>
-              <p className="text-xs text-slate-500 mt-1 font-medium">{error}</p>
-            </div>
-            <button
-              onClick={loadBrief}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-blue-900 text-white hover:bg-blue-800 transition-colors shadow-xs"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>{language === "hi" ? "पुनः प्रयास करें" : "Retry"}</span>
-            </button>
-          </div>
+          </section>
         ) : card ? (
-          <div className="space-y-6 animate-in fade-in-50 duration-200">
+          <div className="space-y-5">
             {/* The 2-Second Decision Hero (Always Visible on Activity Tab, Compact on others) */}
             <DecisionHero
               verdicts={card.verdicts}
@@ -217,6 +216,7 @@ function ClearClassApp() {
               onSelectCohort={setSelectedCohort}
               language={language}
               scenarioId={card.scenarioId}
+              compact={activeTab !== "activity"}
             />
 
             {/* Tab 1: Activity Advice */}
@@ -264,47 +264,14 @@ function ClearClassApp() {
         ) : null}
       </main>
 
-      {/* Clean Attribution Footer */}
-      <footer className="border-t border-slate-200 bg-white py-6 mt-12 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <p className="font-bold text-slate-800">ClearClass · Bharat Builds Tour 2026 (Track 01 Air)</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Rules and physics decide; Amazon Bedrock explains and converses. Project reference advisory adaptation.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium">
-              <a
-                href="https://open-meteo.com"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:underline flex items-center gap-1 text-slate-600 hover:text-slate-900"
-              >
-                <span>CAMS Global Forecast</span>
-                <ExternalLink className="w-2.5 h-2.5 text-slate-400" />
-              </a>
-              <span>·</span>
-              <a
-                href="https://document.airnow.gov/air-quality-and-outdoor-guidance-for-schools.pdf"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:underline flex items-center gap-1 text-slate-600 hover:text-slate-900"
-              >
-                <span>EPA AirNow Guidance</span>
-                <ExternalLink className="w-2.5 h-2.5 text-slate-400" />
-              </a>
-              <span>·</span>
-              <a
-                href="https://www.cedarpolicy.com"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:underline flex items-center gap-1 text-slate-600 hover:text-slate-900"
-              >
-                <span>Cedar Policy</span>
-                <ExternalLink className="w-2.5 h-2.5 text-slate-400" />
-              </a>
-            </div>
+      <footer className="mt-10 border-t bg-card py-5 text-sm text-muted-foreground">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 sm:px-6">
+          <p className="font-medium text-foreground">ClearClass · Bharat Builds Tour 2026 (Track 01 Air)</p>
+          <p>Rules and physics decide; Amazon Bedrock explains and converses. Project reference advisory adaptation.</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <a className="underline-offset-4 hover:text-primary hover:underline" href="https://open-meteo.com" target="_blank" rel="noreferrer">CAMS Global Forecast <ExternalLink className="inline h-3.5 w-3.5" aria-hidden="true" /></a>
+            <a className="underline-offset-4 hover:text-primary hover:underline" href="https://document.airnow.gov/air-quality-and-outdoor-guidance-for-schools.pdf" target="_blank" rel="noreferrer">EPA AirNow Guidance <ExternalLink className="inline h-3.5 w-3.5" aria-hidden="true" /></a>
+            <a className="underline-offset-4 hover:text-primary hover:underline" href="https://www.cedarpolicy.com" target="_blank" rel="noreferrer">Cedar Policy <ExternalLink className="inline h-3.5 w-3.5" aria-hidden="true" /></a>
           </div>
         </div>
       </footer>
@@ -316,8 +283,8 @@ export default function Page() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-blue-900 animate-spin" />
+        <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground" role="status">
+          Preparing school brief…
         </div>
       }
     >

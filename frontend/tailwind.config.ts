@@ -1,7 +1,6 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -63,6 +62,24 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        status: {
+          allow: {
+            DEFAULT: "hsl(var(--status-allow-bg))",
+            foreground: "hsl(var(--status-allow-fg))",
+          },
+          modify: {
+            DEFAULT: "hsl(var(--status-modify-bg))",
+            foreground: "hsl(var(--status-modify-fg))",
+          },
+          deny: {
+            DEFAULT: "hsl(var(--status-deny-bg))",
+            foreground: "hsl(var(--status-deny-fg))",
+          },
+          unknown: {
+            DEFAULT: "hsl(var(--status-unknown-bg))",
+            foreground: "hsl(var(--status-unknown-fg))",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -82,11 +99,6 @@ const config: Config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      boxShadow: {
-        card: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04)",
-        "card-hover": "0 6px 12px -2px rgba(0, 0, 0, 0.06), 0 3px 6px -3px rgba(0, 0, 0, 0.06)",
-        popover: "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)",
       },
     },
   },

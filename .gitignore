@@ -28,6 +28,7 @@ coverage/
 frontend/out.zip
 *.zip
 *.tsbuildinfo
+.impeccable/review/
 
 # OS/editor
 .DS_Store

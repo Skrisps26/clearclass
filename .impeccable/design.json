@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T22:01:35Z",
+  "title": "Design System: ClearClass",
+  "extensions": {
+    "typographyMeta": {
+      "headline": { "displayName": "Decision stance", "purpose": "The assessed school-day action." },
+      "body": { "displayName": "Operational reading", "purpose": "Instructions, notices and rationale." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "control-color", "value": "color and background-color 150ms ease-in-out", "purpose": "Button and tab hover state only; no content entrance sequence." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Explicit action on a flat sheet.",
+      "html": "<button class=\"ds-button-primary\">Copy notice</button>",
+      "css": ".ds-button-primary { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border: 0; border-radius: 6px; padding: 8px 16px; min-height: 40px; font: 500 14px/1.3 system-ui, sans-serif; cursor: pointer; transition: background-color 150ms ease-in-out; } .ds-button-primary:hover { background: hsl(var(--primary) / .9); } .ds-button-primary:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Location and refresh controls without elevation.",
+      "html": "<button class=\"ds-button-outline\">Change location</button>",
+      "css": ".ds-button-outline { background: hsl(var(--background)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--input)); border-radius: 6px; padding: 8px 12px; min-height: 36px; font: 500 14px/1.3 system-ui, sans-serif; cursor: pointer; transition: background-color 150ms ease-in-out; } .ds-button-outline:hover { background: hsl(var(--accent)); } .ds-button-outline:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Search and assistant entry with visible focus.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search city or area\" />",
+      "css": ".ds-input { background: hsl(var(--background)); color: hsl(var(--foreground)); border: 1px solid hsl(var(--input)); border-radius: 6px; padding: 8px 12px; height: 40px; font: 400 16px/1.4 system-ui, sans-serif; } .ds-input::placeholder { color: hsl(var(--muted-foreground)); } .ds-input:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Navigation tab",
+      "kind": "nav",
+      "description": "Underlined main task navigation; one active item.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-tab ds-active\">Activity</button><button class=\"ds-tab\">Ventilation</button></nav>",
+      "css": ".ds-nav { display: flex; gap: 16px; border-bottom: 1px solid hsl(var(--border)); } .ds-tab { background: transparent; color: hsl(var(--muted-foreground)); border: 0; border-bottom: 2px solid transparent; padding: 8px 2px; min-height: 40px; font: 500 14px/1.4 system-ui, sans-serif; cursor: pointer; } .ds-tab:hover, .ds-tab.ds-active { color: hsl(var(--primary)); } .ds-tab.ds-active { border-bottom-color: hsl(var(--primary)); } .ds-tab:focus-visible { outline: 2px solid hsl(var(--ring)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Assessed status",
+      "kind": "chip",
+      "refersTo": "status-allow",
+      "description": "Short status word plus tint; no interaction implied.",
+      "html": "<span class=\"ds-status-allow\">ALLOW</span>",
+      "css": ".ds-status-allow { display: inline-flex; align-items: center; background: hsl(var(--status-allow-bg)); color: hsl(var(--status-allow-fg)); border-radius: 9999px; padding: 4px 10px; font: 600 13px/1.3 system-ui, sans-serif; }"
+    },
+    {
+      "name": "Ruled activity row",
+      "kind": "custom",
+      "description": "One activity, instruction and status in a continuous list.",
+      "html": "<div class=\"ds-row\"><strong>Morning Assembly</strong><span>ALLOW</span><p>Proceed normally with regular outdoor activities.</p></div>",
+      "css": ".ds-row { background: hsl(var(--card)); color: hsl(var(--foreground)); border-bottom: 1px solid hsl(var(--border)); padding: 16px 20px; font: 400 15px/1.45 system-ui, sans-serif; } .ds-row strong { font-size: 16px; font-weight: 600; } .ds-row span { float: right; color: hsl(var(--status-allow-fg)); } .ds-row p { clear: both; margin: 6px 0 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The morning duty sheet",
+    "overview": "Staff consult ClearClass before school opens, often on a phone. The interface reads like an operational risk-assessment sheet: a short assessed stance, the cohort switch, then one ruled activity list. It is deliberately a reading surface rather than a dashboard of repeated metrics. Air provenance, unavailable guidance, and model limitations remain visible where they affect the decision.",
+    "keyCharacteristics": ["cool off-white canvas", "white sheets", "ink-first hierarchy", "quiet blue actions", "thin rules", "explicit text status labels", "compact mobile controls"],
+    "rules": [
+      { "name": "The Provenance Rule", "body": "A model forecast, cached forecast, demo scenario, stale forecast, and unavailable forecast are labeled as different states. No reference AQI appears when the API value is null; no forecast is presented as a campus measurement.", "section": "colors" },
+      { "name": "The Instruction Rule", "body": "Name the action before its rationale. A row never relies on its status color alone.", "section": "typography" }
+    ],
+    "dos": [
+      "Do keep decisions attached to the affected activity and cohort, especially when guidance is mixed or withheld.",
+      "Do show status words and source context alongside tint; permit scanning without color vision.",
+      "Do let long Hindi and source names wrap naturally without horizontal document overflow."
+    ],
+    "donts": [
+      "Don't duplicate the four verdicts in a hero tile grid above their actual instructions.",
+      "Don't present synthetic, stale, unavailable or modelled data as live campus observations.",
+      "Don't use decorative gradients, pulsing badges, micro-labels, or nested icon-card panels in the operating surface."
+    ]
+  }
+}

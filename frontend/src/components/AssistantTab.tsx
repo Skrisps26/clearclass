@@ -1,18 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Bot, User, Send, Loader2, Sparkles, ShieldCheck } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { sendChatMessage } from "../lib/api";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 interface AssistantTabProps {
   schoolId: string;
@@ -90,113 +82,98 @@ export function AssistantTab({
   };
 
   return (
-    <Card className="rounded-2xl border border-border shadow-card overflow-hidden flex flex-col min-h-[560px] animate-in fade-in-50 duration-200">
-      {/* Header */}
-      <CardHeader className="p-5 border-b border-border bg-muted/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 space-y-0">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-900 to-indigo-950 text-white flex items-center justify-center shrink-0 shadow-xs">
-            <Bot className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3>
-                <CardTitle className="text-base font-bold text-card-foreground tracking-tight">
-                  {language === "hi" ? "ClearClass सहायक" : "ClearClass Conversational Assistant"}
-                </CardTitle>
-              </h3>
-              <Badge variant="outline" className="text-[10px] font-bold bg-blue-50 text-blue-900 border-blue-200 font-mono">
-                Sydney Bedrock Nova Micro
-              </Badge>
-            </div>
-            <CardDescription className="text-xs text-muted-foreground font-medium mt-0.5">
-              {language === "hi"
-                ? `${locationName} के वायु पूर्वानुमान और Cedar नियमों पर आधारित द्वैभाषिक प्रश्नोत्तर`
-                : `Grounded in ${locationName}'s forecast and Cedar policies via 4 server-side tools.`}
-            </CardDescription>
-          </div>
-        </div>
+    <section
+      aria-labelledby="assistant-heading"
+      className="border border-border bg-card"
+    >
+      <header className="border-b border-border px-4 py-4 sm:px-5">
+        <h2
+          id="assistant-heading"
+          className="text-lg font-semibold text-card-foreground"
+        >
+          {language === "hi" ? "ClearClass सहायक" : "ClearClass Conversational Assistant"}
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          {language === "hi"
+            ? `${locationName} के वायु पूर्वानुमान और Cedar नियमों पर आधारित द्वैभाषिक प्रश्नोत्तर`
+            : `Grounded in ${locationName}'s forecast and Cedar policies via 4 server-side tools.`}
+        </p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          Sydney Bedrock Nova Micro · No Medical Claims
+        </p>
+      </header>
 
-        <Badge variant="outline" className="gap-1.5 px-3 py-1.5 text-xs font-medium bg-background shadow-2xs">
-          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Tool-Grounded · No Medical Claims</span>
-        </Badge>
-      </CardHeader>
-
-      {/* Main Conversation Stream */}
-      <CardContent className="flex-1 p-5 overflow-y-auto space-y-4">
-        {/* Intro / Starter Prompts */}
+      <div className="px-4 py-5 sm:px-5">
         {messages.length === 0 && (
-          <div className="py-6 max-w-xl mx-auto text-center space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-900 flex items-center justify-center mx-auto shadow-xs">
-              <Sparkles className="w-6 h-6" />
-            </div>
+          <section aria-labelledby="assistant-prompts-heading">
+            <h3
+              id="assistant-prompts-heading"
+              className="text-base font-semibold text-card-foreground"
+            >
+              {language === "hi" ? "आज के निर्णयों पर प्रश्न पूछें" : "Ask About Today's Operational Decisions"}
+            </h3>
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+              {language === "hi"
+                ? "सहायक वास्तविक देवदार (Cedar) नियमों और वायु मॉडल का उपयोग करके उत्तर देता है।"
+                : "The assistant evaluates today's CAMS Global air forecast, Cedar rules, and classroom ventilation physics to answer staff operational questions in English or Hindi."}
+            </p>
 
-            <div>
-              <h3 className="text-base font-bold text-card-foreground tracking-tight">
-                {language === "hi" ? "आज के निर्णयों पर प्रश्न पूछें" : "Ask About Today's Operational Decisions"}
-              </h3>
-              <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-medium">
-                {language === "hi"
-                  ? "सहायक वास्तविक देवदार (Cedar) नियमों और वायु मॉडल का उपयोग करके उत्तर देता है।"
-                  : "The assistant evaluates today's CAMS Global air forecast, Cedar rules, and classroom ventilation physics to answer staff operational questions in English or Hindi."}
+            <div className="mt-5">
+              <p className="mb-2 text-sm font-medium text-card-foreground">
+                {language === "hi" ? "त्वरित प्रश्न" : "Suggested questions"}
               </p>
-            </div>
-
-            {/* Quick 1-Click Starter Question Chips */}
-            <div className="pt-2 text-left space-y-2">
-              <span className="text-[10px] uppercase font-bold text-muted-foreground block text-center font-mono">
-                {language === "hi" ? "त्वरित प्रश्न (1-Click Test Prompts)" : "Suggested 1-Click Test Prompts"}
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <ul className="border-y border-border">
                 {STARTER_PROMPTS[language].map((prompt, idx) => (
-                  <Button
-                    key={idx}
-                    variant="outline"
-                    onClick={() => handleSend(prompt)}
-                    className="p-3.5 h-auto text-left rounded-xl border border-border bg-muted/40 hover:bg-blue-50/50 hover:border-blue-300 hover:shadow-2xs text-xs font-medium transition-all justify-start whitespace-normal"
-                  >
-                    "{prompt}"
-                  </Button>
+                  <li key={idx} className="border-b border-border last:border-b-0">
+                    <button
+                      type="button"
+                      onClick={() => handleSend(prompt)}
+                      className="w-full px-3 py-3 text-left text-sm leading-6 text-foreground transition-colors hover:bg-muted focus-visible:bg-muted"
+                    >
+                      {prompt}
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          </div>
+          </section>
         )}
 
-        {/* Message Thread */}
-        {messages.map((m, idx) => {
-          const isUser = m.role === "user";
-          return (
-            <div
-              key={idx}
-              className={`flex items-start gap-3 ${isUser ? "justify-end" : "justify-start"}`}
-            >
-              {!isUser && (
-                <div className="w-7 h-7 rounded-lg bg-blue-900 text-white flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-2xs">
-                  <Bot className="w-4 h-4" />
-                </div>
-              )}
-              <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-xs leading-relaxed font-medium whitespace-pre-wrap ${
-                  isUser
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "bg-muted/50 text-card-foreground border border-border/90 shadow-2xs"
-                }`}
-              >
-                {m.content}
-              </div>
-              {isUser && (
-                <div className="w-7 h-7 rounded-lg bg-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5 text-xs shadow-2xs">
-                  <User className="w-4 h-4" />
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {messages.length > 0 && (
+          <section aria-label={language === "hi" ? "सहायक वार्तालाप" : "Assistant conversation"}>
+            <ol className="border-y border-border">
+              {messages.map((message, idx) => {
+                const isUser = message.role === "user";
+                return (
+                  <li
+                    key={idx}
+                    className={`px-3 py-4 ${idx > 0 ? "border-t border-border" : ""}`}
+                  >
+                    <p className="text-xs font-semibold text-muted-foreground">
+                      {isUser
+                        ? language === "hi"
+                          ? "कर्मचारी"
+                          : "Staff"
+                        : language === "hi"
+                          ? "ClearClass सहायक"
+                          : "ClearClass Assistant"}
+                    </p>
+                    <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-card-foreground">
+                      {message.content}
+                    </p>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        )}
 
         {loading && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium py-2">
-            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          <div
+            aria-live="polite"
+            className="flex items-center gap-2 py-3 text-sm text-muted-foreground"
+          >
+            <Loader2 className="h-4 w-4 animate-spin text-primary" />
             <span>
               {language === "hi"
                 ? "सहायक Cedar नीतियों और वायु मॉडल का मूल्यांकन कर रहा है..."
@@ -204,18 +181,21 @@ export function AssistantTab({
             </span>
           </div>
         )}
-      </CardContent>
+      </div>
 
-      {/* Input Bar using CardFooter */}
-      <CardFooter className="p-4 border-t border-border bg-muted/20">
+      <div className="border-t border-border px-4 py-4 sm:px-5">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSend();
           }}
-          className="flex items-center gap-2 w-full"
+          className="flex items-center gap-2"
         >
-          <input
+          <label htmlFor="assistant-question" className="sr-only">
+            {language === "hi" ? "सहायक से प्रश्न पूछें" : "Ask the assistant a question"}
+          </label>
+          <Input
+            id="assistant-question"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -224,18 +204,22 @@ export function AssistantTab({
                 ? "सहायक से कोई प्रश्न पूछें..."
                 : "Ask about morning assembly, PE intensity, window flushing, or sensitive pupils..."
             }
-            className="flex-1 px-4 py-2.5 text-xs sm:text-sm rounded-xl border border-input bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-all font-medium text-foreground placeholder:text-muted-foreground shadow-2xs"
+            className="h-11 min-w-0 flex-1 text-sm shadow-none"
           />
           <Button
             type="submit"
             disabled={loading || !input.trim()}
-            className="rounded-xl px-4 py-2.5 text-xs font-bold gap-1.5 shadow-xs shrink-0"
+            className="h-11 shrink-0 rounded-md px-4 text-sm font-medium"
           >
-            {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+            {loading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
             <span>{language === "hi" ? "पूछें" : "Ask"}</span>
           </Button>
         </form>
-      </CardFooter>
-    </Card>
+      </div>
+    </section>
   );
 }

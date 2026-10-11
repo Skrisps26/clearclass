@@ -80,3 +80,11 @@ Record dated choices, rejected alternatives, source and effect on requirements. 
 - **Rejected:** Heavy per-function pip bundling in Lambda, storing card payloads as unparsed blobs without schema identity checks, converting floats to arbitrary strings in DynamoDB, and bypassing the DynamoDB cache on float errors.
 - **Sources:** Live CloudWatch log error analysis (`TypeError: Float types are not supported`), S3 layer publication response, and deployed smoke test covering Delhi, Bengaluru, London, and Reykjavik on 2026-10-11.
 - **MUST impact:** Zero cross-region deployment; all resources in `ap-southeast-2`. Bounded execution, deterministic policy decisions, and full model disclosures preserved.
+
+## 2026-10-12 — Responsive Next.js daily card UI and static export
+
+- **Choice:** Built `frontend/` as a Next.js 14 App Router, TypeScript, and Tailwind CSS client capable of static export (`output: 'export'`). Pinned `react` 18.3, `react-dom` 18.3, `next` 14.2.35, `lucide-react` 0.453, `recharts` 2.13, `@tanstack/react-query` 5.59, `zod` 3.23, `clsx` 2.1, and `tailwind-merge` 2.5. Omitted heavy ESLint runtime devDependencies to keep local builds lean and deterministic. Designed under `PRODUCT.md` and `DESIGN.md` in `Operate` mode.
+- **Why:** A static client bundle (`out/`) contains zero server-side credentials or request-dependent server routes, enabling deployment to Amplify Hosting or private S3 + CloudFront OAC. All runtime business logic remains in Sydney Lambdas. Verified in headless Chromium: loaded live Delhi brief from Sydney API Gateway with `MODIFY` badges, Cedar rule disclosure, and model caveats; toggled Devanagari Hindi; verified `?scenario=good-day` (8 `ALLOW` badges, Ref AQI 35) and `?scenario=severe-day` (8 `WITHHELD` badges, Ref AQI 350, coverage gap documented); and confirmed mobile viewport (390x844) stacks cohorts vertically with zero horizontal overflow.
+- **Rejected:** Server actions, request-dependent server routes, default Next.js image optimization in the static path, storing API keys in the client bundle, and relying on color alone for allow/modify/deny decisions.
+- **Sources:** Next.js static export documentation (https://nextjs.org/docs/app/guides/static-exports); verified browser execution on 2026-10-12.
+- **MUST impact:** Zero server-side state in frontend; all domain logic executed in Sydney.

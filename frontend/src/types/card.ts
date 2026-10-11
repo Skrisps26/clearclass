@@ -152,6 +152,7 @@ export type Ventilation = z.infer<typeof VentilationSchema>;
 export type FlushWindow = z.infer<typeof FlushWindowSchema>;
 export type EvidenceSource = z.infer<typeof EvidenceSourceSchema>;
 export type CardLocation = z.infer<typeof CardLocationSchema>;
+export type ReferenceAqi = z.infer<typeof ReferenceAqiSchema>;
 export type ParentMessage = z.infer<typeof ParentMessageSchema>;
 
 export interface SchoolTemplate {

@@ -29,7 +29,7 @@ def main():
     env["PATH"] = f"{Path(python).parent}:{env['PATH']}"
     env["SAM_CLI_TELEMETRY"] = "0"
     subprocess.run(
-        ["uvx", "--from", "aws-sam-cli", "sam", "build", "--template-file", "infra/template.yaml",
+        ["sam", "build", "--template-file", "infra/template.yaml",
          "--build-dir", ".aws-sam/build", "--region", REGION, "--profile", PROFILE],
         cwd=ROOT, env=env, check=True,
     )
@@ -44,21 +44,25 @@ def main():
     spike_uri = f"s3://{bucket}/{code['S3Key']}"
     source = ROOT / ".aws-sam/build/BriefFunction"
     bundle = ROOT / ".aws-sam/brief.zip"
-    with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+    with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(source.rglob("*")):
             if path.is_file():
                 archive.write(path, path.relative_to(source))
+    print(f"Packaged brief bundle: {bundle.stat().st_size} bytes ({bundle.stat().st_size / (1024*1024):.2f} MB)", flush=True)
     digest = hashlib.sha256(bundle.read_bytes()).hexdigest()
     key = f"clearclass/artifacts/brief-{digest}.zip"
-    s3 = session.client("s3", config=Config(retries={"max_attempts": 5, "mode": "standard"}, read_timeout=120))
+    s3 = session.client("s3", config=Config(retries={"max_attempts": 3, "mode": "standard"}, read_timeout=600, connect_timeout=60))
     try:
         s3.head_object(Bucket=bucket, Key=key)
         print("Reusing existing brief artifact:", key, flush=True)
     except ClientError as error:
         if error.response.get("Error", {}).get("Code") not in {"404", "NoSuchKey"}:
             raise
-        with bundle.open("rb") as content:
-            s3.put_object(Bucket=bucket, Key=key, Body=content)
+        subprocess.run(
+            ["aws", "s3api", "put-object", "--bucket", bucket, "--key", key,
+             "--body", str(bundle), "--profile", PROFILE, "--region", REGION],
+            check=True,
+        )
         print("Uploaded brief artifact:", key, flush=True)
 
     template = yaml.safe_load((ROOT / ".aws-sam/build/template.yaml").read_text())
@@ -67,7 +71,7 @@ def main():
     packaged = ROOT / ".aws-sam/packaged.yaml"
     packaged.write_text(yaml.safe_dump(template, sort_keys=False))
     subprocess.run(
-        ["uvx", "--from", "aws-sam-cli", "sam", "deploy", "--template-file", str(packaged),
+        ["sam", "deploy", "--template-file", str(packaged),
          "--stack-name", STACK, "--s3-bucket", bucket, "--capabilities", "CAPABILITY_IAM",
          "--region", REGION, "--profile", PROFILE, "--no-confirm-changeset",
          "--no-fail-on-empty-changeset"],

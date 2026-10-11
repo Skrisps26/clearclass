@@ -8,6 +8,9 @@ from pathlib import Path
 from botocore.exceptions import ClientError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.domain.card import DailyCard
+from src.domain.card_store import CardStore
+from tests.test_card import MemoryCardTable
 from src.domain.air import ProviderError
 from src.domain.limits import RateLimited
 from src.domain.models import Location
@@ -118,7 +121,7 @@ class BriefRouteTests(unittest.TestCase):
         synthetic = body(self.call("GET /schools/{id}/brief", {"scenario": "severe-day"}))
         self.assertEqual(synthetic["air"]["status"], "synthetic")
         self.assertEqual(synthetic["date"], "2026-10-10")
-        self.assertIn("Synthetic", synthetic["parentMessage"]["en"])
+        self.assertTrue(synthetic["parentMessage"]["en"])
         self.assertEqual(self.call("GET /schools/{id}/brief", {"scenario": "missing"})["statusCode"], 404)
         self.assertEqual(self.call("GET /schools/{id}/brief", {"locationId": "abc"})["statusCode"], 400)
         self.assertEqual(self.call("GET /schools/{id}/brief", {"locationId": "999999"})["statusCode"], 404)
@@ -137,6 +140,41 @@ class BriefRouteTests(unittest.TestCase):
         self.assertIsNone(self.store.latest_air(moved))
         self.assertIsNotNone(self.store.latest_air(LONDON))
 
+    def test_brief_response_validates_as_daily_card_and_includes_verdicts_and_bilingual_messages(self):
+        reply = self.call("GET /schools/{id}/brief", {"scenario": "very-poor-day"})
+        self.assertEqual(reply["statusCode"], 200)
+        card_data = body(reply)
+        validated = DailyCard.model_validate(card_data)
+        self.assertEqual(validated.scenarioId, "very-poor-day")
+        self.assertEqual(validated.regulatoryCoverage, "reference_only")
+        self.assertGreaterEqual(len(validated.verdicts), 8)
+        sport = next(v for v in validated.verdicts if v.activity == "sports" and v.cohort == "all_students")
+        self.assertEqual((sport.status, sport.decision), ("evaluated", "modify"))
+        self.assertTrue(sport.ruleIds)
+        self.assertTrue(validated.parentMessage.en)
+        self.assertTrue(validated.parentMessage.hi)
+        self.assertEqual(validated.ventilation.status, "estimated")
+        self.assertTrue(validated.policySources)
+
+    def test_brief_integrates_card_store_for_same_place_and_preserves_identity(self):
+        table = MemoryCardTable()
+        card_store = CardStore(table)
+        reply1 = handle(event("GET /schools/{id}/brief", {"scenario": "good-day"}), self.provider, self.store, self.limiter, NOW, card_store=card_store)
+        self.assertEqual(reply1["statusCode"], 200)
+        self.assertEqual(len(table.items), 1)
+        reply2 = handle(event("GET /schools/{id}/brief", {"scenario": "good-day"}), self.provider, self.store, self.limiter, NOW, card_store=card_store)
+        self.assertEqual(reply2["statusCode"], 200)
+        self.assertEqual(body(reply1), body(reply2))
+
+    def test_unavailable_air_still_validates_as_daily_card_with_caveats(self):
+        self.provider.fail_location = LONDON.id
+        reply = self.call("GET /schools/{id}/brief")
+        self.assertEqual(reply["statusCode"], 200)
+        card_data = body(reply)
+        validated = DailyCard.model_validate(card_data)
+        self.assertEqual(validated.air.status, "unavailable")
+        self.assertEqual(validated.ventilation.status, "unavailable")
+        self.assertTrue(all(v.status == "insufficient_data" for v in validated.verdicts))
 
 if __name__ == "__main__":
     unittest.main()

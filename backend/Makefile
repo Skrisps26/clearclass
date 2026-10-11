@@ -1,3 +1,5 @@
 build-BriefFunction:
-	uv pip install --python 3.12 --target "$(ARTIFACTS_DIR)" -r requirements-brief.txt
+	mkdir -p "$(ARTIFACTS_DIR)"
 	cp -R src "$(ARTIFACTS_DIR)/src"
+	cp -R policies "$(ARTIFACTS_DIR)/policies"
+	cp -R config "$(ARTIFACTS_DIR)/config"

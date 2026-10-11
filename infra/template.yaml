@@ -57,6 +57,19 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: expiresAt
         Enabled: true
+  CardTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: cardKey
+          AttributeType: S
+      KeySchema:
+        - AttributeName: cardKey
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
   PublicApi:
     Type: AWS::Serverless::HttpApi
     Properties:
@@ -84,10 +97,14 @@ Resources:
       MemorySize: 512
       Timeout: 20
       ReservedConcurrentExecutions: 3
+      Layers:
+        - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:clearclass-cedar-runtime:1'
       Environment:
         Variables:
           SNAPSHOT_BUCKET: !Ref SnapshotBucket
           COUNTERS_TABLE: !Ref CounterTable
+          CARDS_TABLE: !Ref CardTable
+          PYTHONPATH: /var/task:/opt
       Policies:
         - Version: '2012-10-17'
           Statement:
@@ -100,6 +117,10 @@ Resources:
                 - !Sub '${SnapshotBucket.Arn}/air/*'
                 - !Sub '${SnapshotBucket.Arn}/locations/*'
                 - !Sub '${SnapshotBucket.Arn}/search/*'
+            - Sid: ReadVersionedReferencePolicy
+              Effect: Allow
+              Action: s3:GetObject
+              Resource: !Sub '${SnapshotBucket.Arn}/policies/reference-school-activity/*'
             - Sid: DistinguishMissingCacheObjects
               Effect: Allow
               Action: s3:ListBucket
@@ -108,6 +129,12 @@ Resources:
               Effect: Allow
               Action: dynamodb:UpdateItem
               Resource: !GetAtt CounterTable.Arn
+            - Sid: ReadWriteVersionedCards
+              Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+              Resource: !GetAtt CardTable.Arn
       Events:
         Locations:
           Type: HttpApi

@@ -1,0 +1,1249 @@
+{
+  "$defs": {
+    "AirData": {
+      "additionalProperties": false,
+      "properties": {
+        "ageMinutes": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ageminutes"
+        },
+        "authoritativeLocalAqi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AuthoritativeLocalAqi"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "domain": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Domain"
+        },
+        "grid": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Coordinates"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "hourly": {
+          "items": {
+            "$ref": "#/$defs/AirHour"
+          },
+          "maxItems": 72,
+          "title": "Hourly",
+          "type": "array"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "referenceAqi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferenceAqi"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sourceResolution": {
+          "anyOf": [
+            {
+              "maxLength": 300,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourceresolution"
+        },
+        "stale": {
+          "title": "Stale",
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "synthetic",
+            "cached",
+            "cached_stale",
+            "modelled",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "stale"
+      ],
+      "title": "AirData",
+      "type": "object"
+    },
+    "AirHour": {
+      "additionalProperties": false,
+      "description": "One provider forecast instant; ``time`` is always an aware instant.",
+      "properties": {
+        "localTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Localtime"
+        },
+        "pm10": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pm10"
+        },
+        "pm25": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pm25"
+        },
+        "referenceAqi": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Referenceaqi"
+        },
+        "time": {
+          "format": "date-time",
+          "title": "Time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "time"
+      ],
+      "title": "AirHour",
+      "type": "object"
+    },
+    "AuthoritativeLocalAqi": {
+      "additionalProperties": false,
+      "description": "An authority-issued AQI, intentionally separate from reference AQI.",
+      "properties": {
+        "issuedAt": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issuedat"
+        },
+        "provider": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "scheme": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Scheme",
+          "type": "string"
+        },
+        "sourceUrl": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourceurl"
+        },
+        "value": {
+          "minimum": 0,
+          "title": "Value",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scheme",
+        "value",
+        "provider"
+      ],
+      "title": "AuthoritativeLocalAqi",
+      "type": "object"
+    },
+    "CardLocation": {
+      "additionalProperties": false,
+      "description": "Resolved provider place, never a client assertion.",
+      "properties": {
+        "admin1": {
+          "anyOf": [
+            {
+              "maxLength": 120,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Admin1"
+        },
+        "coordinates": {
+          "$ref": "#/$defs/Coordinates"
+        },
+        "country": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Country",
+          "type": "string"
+        },
+        "countryCode": {
+          "anyOf": [
+            {
+              "maxLength": 2,
+              "minLength": 2,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Countrycode"
+        },
+        "id": {
+          "exclusiveMinimum": 0,
+          "title": "Id",
+          "type": "integer"
+        },
+        "name": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "timezone": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Timezone",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "coordinates",
+        "country",
+        "timezone"
+      ],
+      "title": "CardLocation",
+      "type": "object"
+    },
+    "Coordinates": {
+      "additionalProperties": false,
+      "properties": {
+        "latitude": {
+          "maximum": 90,
+          "minimum": -90,
+          "title": "Latitude",
+          "type": "number"
+        },
+        "longitude": {
+          "maximum": 180,
+          "minimum": -180,
+          "title": "Longitude",
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "title": "Coordinates",
+      "type": "object"
+    },
+    "EvidenceSource": {
+      "additionalProperties": false,
+      "properties": {
+        "accessed": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accessed"
+        },
+        "classification": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Classification",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "issued": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issued"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "pages": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pages"
+        },
+        "publisher": {
+          "anyOf": [
+            {
+              "maxLength": 240,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Publisher"
+        },
+        "title": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "url",
+        "classification"
+      ],
+      "title": "EvidenceSource",
+      "type": "object"
+    },
+    "FlushWindow": {
+      "additionalProperties": false,
+      "properties": {
+        "end": {
+          "format": "date-time",
+          "title": "End",
+          "type": "string"
+        },
+        "start": {
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "FlushWindow",
+      "type": "object"
+    },
+    "ModelAssumption": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Label",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        },
+        "units": {
+          "anyOf": [
+            {
+              "maxLength": 80,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Units"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "title": "ModelAssumption",
+      "type": "object"
+    },
+    "OfficialStage": {
+      "additionalProperties": false,
+      "description": "A verified official stage, never defaulted to a clean/zero stage.",
+      "properties": {
+        "effectiveFrom": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effectivefrom"
+        },
+        "effectiveUntil": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Effectiveuntil"
+        },
+        "issueTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Issuetime"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/EvidenceSource"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "stage": {
+          "anyOf": [
+            {
+              "maxLength": 160,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stage"
+        }
+      },
+      "title": "OfficialStage",
+      "type": "object"
+    },
+    "ParentMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "En",
+          "type": "string"
+        },
+        "hi": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Hi",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "hi"
+      ],
+      "title": "ParentMessage",
+      "type": "object"
+    },
+    "ReferenceAqi": {
+      "additionalProperties": false,
+      "properties": {
+        "modelled": {
+          "title": "Modelled",
+          "type": "boolean"
+        },
+        "provider": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Provider",
+          "type": "string"
+        },
+        "scheme": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Scheme",
+          "type": "string"
+        },
+        "value": {
+          "minimum": 0,
+          "title": "Value",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scheme",
+        "value",
+        "provider",
+        "modelled"
+      ],
+      "title": "ReferenceAqi",
+      "type": "object"
+    },
+    "Ventilation": {
+      "additionalProperties": false,
+      "properties": {
+        "assumptions": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/ModelAssumption"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Assumptions"
+        },
+        "co2Feasible": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Co2Feasible"
+        },
+        "estimateLabel": {
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Estimatelabel",
+          "type": "string"
+        },
+        "flushWindows": {
+          "items": {
+            "$ref": "#/$defs/FlushWindow"
+          },
+          "maxItems": 24,
+          "title": "Flushwindows",
+          "type": "array"
+        },
+        "inputs": {
+          "additionalProperties": true,
+          "title": "Inputs",
+          "type": "object"
+        },
+        "localDate": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Localdate"
+        },
+        "locationId": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Locationid"
+        },
+        "modelVersion": {
+          "anyOf": [
+            {
+              "maxLength": 120,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modelversion"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "schedule": {
+          "additionalProperties": true,
+          "title": "Schedule",
+          "type": "object"
+        },
+        "schoolDay": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FlushWindow"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/EvidenceSource"
+          },
+          "maxItems": 32,
+          "title": "Sources",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "estimated",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/VentilationStep"
+          },
+          "maxItems": 78,
+          "title": "Steps",
+          "type": "array"
+        },
+        "summary": {
+          "additionalProperties": true,
+          "title": "Summary",
+          "type": "object"
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "estimateLabel"
+      ],
+      "title": "Ventilation",
+      "type": "object"
+    },
+    "VentilationStep": {
+      "additionalProperties": false,
+      "description": "One five-minute model step, expressly an estimate rather than a measurement.",
+      "properties": {
+        "airChangesPerHour": {
+          "minimum": 0,
+          "title": "Airchangesperhour",
+          "type": "number"
+        },
+        "estimatedIndoorCo2Ppm": {
+          "minimum": 0,
+          "title": "Estimatedindoorco2Ppm",
+          "type": "number"
+        },
+        "estimatedIndoorPm25UgM3": {
+          "minimum": 0,
+          "title": "Estimatedindoorpm25Ugm3",
+          "type": "number"
+        },
+        "outdoorPm25UgM3": {
+          "minimum": 0,
+          "title": "Outdoorpm25Ugm3",
+          "type": "number"
+        },
+        "start": {
+          "format": "date-time",
+          "title": "Start",
+          "type": "string"
+        },
+        "windowsOpen": {
+          "title": "Windowsopen",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "start",
+        "outdoorPm25UgM3",
+        "windowsOpen",
+        "airChangesPerHour",
+        "estimatedIndoorPm25UgM3",
+        "estimatedIndoorCo2Ppm"
+      ],
+      "title": "VentilationStep",
+      "type": "object"
+    },
+    "Verdict": {
+      "additionalProperties": false,
+      "properties": {
+        "activity": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Activity",
+          "type": "string"
+        },
+        "assumptions": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "basis": {
+          "anyOf": [
+            {
+              "maxLength": 120,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Basis"
+        },
+        "cohort": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Cohort",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "allow",
+            "modify",
+            "deny"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "forecastValidTimes": {
+          "items": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "maxItems": 72,
+          "title": "Forecastvalidtimes",
+          "type": "array"
+        },
+        "indoorAirCaveat": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Indooraircaveat"
+        },
+        "inputDescription": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inputdescription"
+        },
+        "modifications": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 16,
+          "title": "Modifications",
+          "type": "array"
+        },
+        "policySetVersion": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Policysetversion"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "referenceAqiInput": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReferenceAqi"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "ruleIds": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 32,
+          "title": "Ruleids",
+          "type": "array"
+        },
+        "selectedAction": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selectedaction"
+        },
+        "sensitivePupilCaveat": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sensitivepupilcaveat"
+        },
+        "sourceTime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcetime"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/EvidenceSource"
+          },
+          "maxItems": 32,
+          "title": "Sources",
+          "type": "array"
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "insufficient_data",
+            "stale",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "activity",
+        "cohort",
+        "decision",
+        "status"
+      ],
+      "title": "Verdict",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The complete versioned response for ``GET /schools/{id}/brief``.",
+  "properties": {
+    "air": {
+      "$ref": "#/$defs/AirData"
+    },
+    "dataAsOf": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dataasof"
+    },
+    "dataSource": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Datasource",
+      "type": "string"
+    },
+    "date": {
+      "format": "date",
+      "title": "Date",
+      "type": "string"
+    },
+    "generatedAt": {
+      "format": "date-time",
+      "title": "Generatedat",
+      "type": "string"
+    },
+    "location": {
+      "$ref": "#/$defs/CardLocation"
+    },
+    "officialStage": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/OfficialStage"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "officialStageStatus": {
+      "enum": [
+        "current",
+        "unknown",
+        "stale",
+        "unavailable"
+      ],
+      "title": "Officialstagestatus",
+      "type": "string"
+    },
+    "parentMessage": {
+      "$ref": "#/$defs/ParentMessage"
+    },
+    "policySetVersion": {
+      "anyOf": [
+        {
+          "maxLength": 500,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Policysetversion"
+    },
+    "policySources": {
+      "items": {
+        "$ref": "#/$defs/EvidenceSource"
+      },
+      "maxItems": 32,
+      "title": "Policysources",
+      "type": "array"
+    },
+    "regulatoryCoverage": {
+      "enum": [
+        "reference_only",
+        "verified_local",
+        "local_status_unknown"
+      ],
+      "title": "Regulatorycoverage",
+      "type": "string"
+    },
+    "scenarioId": {
+      "anyOf": [
+        {
+          "maxLength": 120,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scenarioid"
+    },
+    "schoolId": {
+      "maxLength": 160,
+      "minLength": 1,
+      "title": "Schoolid",
+      "type": "string"
+    },
+    "ventilation": {
+      "$ref": "#/$defs/Ventilation"
+    },
+    "verdicts": {
+      "items": {
+        "$ref": "#/$defs/Verdict"
+      },
+      "maxItems": 64,
+      "title": "Verdicts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schoolId",
+    "date",
+    "generatedAt",
+    "dataSource",
+    "location",
+    "regulatoryCoverage",
+    "officialStageStatus",
+    "air",
+    "ventilation",
+    "parentMessage"
+  ],
+  "title": "DailyCard",
+  "type": "object"
+}

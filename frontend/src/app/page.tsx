@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Navbar, NavTab } from "../components/Navbar";
 import { DecisionHero } from "../components/DecisionHero";
@@ -37,6 +37,8 @@ function ClearClassApp() {
 
   // App state
   const [selectedLocation, setSelectedLocation] = useState<CardLocation | null>(null);
+  const [locationReady, setLocationReady] = useState(false);
+  const latestBriefRequest = useRef(0);
   const [selectedScenario, setSelectedScenario] = useState<string | null>(
     searchParams.get("scenario")
   );
@@ -61,6 +63,7 @@ function ClearClassApp() {
           timezone: "",
           coordinates: { latitude: 0, longitude: 0 },
         });
+        setLocationReady(true);
         return;
       }
     }
@@ -71,16 +74,19 @@ function ClearClassApp() {
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === "object" && "id" in parsed) {
           setSelectedLocation(parsed);
+          setLocationReady(true);
           return;
         }
       }
     } catch {
       // ignore
     }
+    setLocationReady(true);
   }, [searchParams]);
 
   // Load brief whenever location, scenario, or language changes
   const loadBrief = async () => {
+    const request = ++latestBriefRequest.current;
     setLoading(true);
     setError(null);
     try {
@@ -90,6 +96,7 @@ function ClearClassApp() {
         selectedScenario || undefined,
         language
       );
+      if (request !== latestBriefRequest.current) return;
       setCard(data);
       if (data.location) {
         setSelectedLocation(data.location);
@@ -100,16 +107,17 @@ function ClearClassApp() {
         }
       }
     } catch (err: unknown) {
+      if (request !== latestBriefRequest.current) return;
       const message = err instanceof Error ? err.message : "Failed to load school brief";
       setError(message);
     } finally {
-      setLoading(false);
+      if (request === latestBriefRequest.current) setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadBrief();
-  }, [selectedLocation?.id, selectedScenario, language]);
+    if (locationReady) loadBrief();
+  }, [locationReady, selectedLocation?.id, selectedScenario, language]);
 
   // Sync URL search params
   const updateUrl = (

@@ -99,7 +99,9 @@ export function AssistantTab({
             : `Grounded in ${locationName}'s forecast and Cedar policies via 4 server-side tools.`}
         </p>
         <p className="mt-2 text-xs text-muted-foreground">
-          Sydney Bedrock Nova Micro · No Medical Claims
+          {language === "hi"
+            ? "मॉडल: Bedrock Nova Micro · AWS प्रसंस्करण क्षेत्र: सिडनी · चिकित्सा सलाह नहीं"
+            : "Model: Bedrock Nova Micro · AWS processing region: Sydney · Not medical advice"}
         </p>
       </header>
 
@@ -176,8 +178,8 @@ export function AssistantTab({
             <Loader2 className="h-4 w-4 animate-spin text-primary" />
             <span>
               {language === "hi"
-                ? "सहायक Cedar नीतियों और वायु मॉडल का मूल्यांकन कर रहा है..."
-                : "Evaluating Cedar policies and physical mass-balance models in Sydney..."}
+                ? `${locationName} के वायु पूर्वानुमान और Cedar नियमों की जाँच की जा रही है...`
+                : `Checking ${locationName}'s forecast and Cedar guidance...`}
             </span>
           </div>
         )}

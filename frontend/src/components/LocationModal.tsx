@@ -1,9 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, MapPin, X, Loader2, Sparkles, Building2 } from "lucide-react";
+import { Search, MapPin, Loader2 } from "lucide-react";
 import { CardLocation } from "../types/card";
 import { searchLocations } from "../lib/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface LocationModalProps {
   isOpen: boolean;
@@ -111,39 +120,26 @@ export function LocationModal({
     return () => clearTimeout(timer);
   }, [query, language]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md animate-in fade-in-50 duration-150">
-      <div
-        className="w-full max-w-lg bg-white rounded-2xl shadow-popover border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
-          <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-blue-700" />
-              {language === "hi" ? "अपना स्कूल स्थान चुनें" : "Select Your School Location"}
-            </h3>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
-              {language === "hi"
-                ? "स्थान खोजें या त्वरित चयन के लिए किसी शहर पर क्लिक करें"
-                : "Search any global city or pick a quick city below"}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-lg p-0 overflow-hidden gap-0 rounded-2xl">
+        {/* Dialog Header */}
+        <DialogHeader className="px-5 py-4 border-b border-border bg-muted/30">
+          <DialogTitle className="text-base font-bold text-foreground flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-blue-700" />
+            <span>{language === "hi" ? "अपना स्कूल स्थान चुनें" : "Select Your School Location"}</span>
+          </DialogTitle>
+          <DialogDescription className="text-xs text-muted-foreground font-medium mt-0.5">
+            {language === "hi"
+              ? "स्थान खोजें या त्वरित चयन के लिए किसी शहर पर क्लिक करें"
+              : "Search any global city or pick a quick city below"}
+          </DialogDescription>
+        </DialogHeader>
 
-        {/* Search Input */}
-        <div className="p-5 border-b border-slate-100">
+        {/* Search Input & Quick Cities */}
+        <div className="p-5 border-b border-border space-y-3.5">
           <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               ref={inputRef}
               type="text"
@@ -154,37 +150,35 @@ export function LocationModal({
                   ? "शहर या ज़िले का नाम लिखें (उदा. Delhi, Mumbai, London)..."
                   : "Search city or area (e.g., Delhi, Mumbai, London)..."
               }
-              className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-300 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 transition-all text-slate-900 placeholder:text-slate-400 font-medium shadow-2xs"
+              className="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm rounded-xl border border-input bg-muted/40 focus:bg-background focus:outline-none focus:ring-2 focus:ring-ring focus:border-input transition-all text-foreground placeholder:text-muted-foreground font-medium shadow-2xs"
             />
             {searching && (
-              <Loader2 className="w-4 h-4 text-blue-800 animate-spin absolute right-3.5 top-1/2 -translate-y-1/2" />
+              <Loader2 className="w-4 h-4 text-primary animate-spin absolute right-3.5 top-1/2 -translate-y-1/2" />
             )}
           </div>
 
-          {/* Quick Select Cities */}
-          <div className="mt-3.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-2 font-mono">
+          {/* Quick Select Cities using shadcn Button */}
+          <div>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block mb-2 font-mono">
               {language === "hi" ? "त्वरित चयन (Quick Cities)" : "Quick Cities"}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {POPULAR_CITIES.map((city) => {
                 const isSelected = currentLocation?.id === city.id;
                 return (
-                  <button
+                  <Button
                     key={city.id}
+                    variant={isSelected ? "default" : "outline"}
+                    size="sm"
                     onClick={() => {
                       onSelectLocation(city);
                       onClose();
                     }}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shadow-2xs ${
-                      isSelected
-                        ? "bg-blue-900 text-white shadow-xs"
-                        : "bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200"
-                    }`}
+                    className="h-8 px-3 text-xs font-semibold rounded-lg gap-1.5 shadow-2xs"
                   >
                     <span>{city.name}</span>
                     <span className="text-[10px] opacity-70 font-mono">({city.countryCode})</span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -192,9 +186,9 @@ export function LocationModal({
         </div>
 
         {/* Results List */}
-        <div className="overflow-y-auto flex-1 p-3 divide-y divide-slate-100">
+        <div className="overflow-y-auto max-h-64 p-3 divide-y divide-border/60">
           {query.trim().length >= 3 && results.length === 0 && !searching && (
-            <div className="py-8 text-center text-xs text-slate-500 font-medium">
+            <div className="py-8 text-center text-xs text-muted-foreground font-medium">
               {language === "hi"
                 ? "कोई स्थान नहीं मिला। सटीक नाम लिखकर पुनः प्रयास करें।"
                 : "No matching places found. Try entering a different city name."}
@@ -208,26 +202,26 @@ export function LocationModal({
                 onSelectLocation(place);
                 onClose();
               }}
-              className="w-full px-3 py-2.5 rounded-xl text-left hover:bg-slate-50 flex items-center justify-between transition-colors group"
+              className="w-full px-3 py-2.5 rounded-xl text-left hover:bg-muted/50 flex items-center justify-between transition-colors group cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center shrink-0 group-hover:bg-blue-100 transition-colors">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-900">{place.name}</p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-xs font-bold text-foreground">{place.name}</p>
+                  <p className="text-[11px] text-muted-foreground">
                     {[place.admin1, place.country].filter(Boolean).join(", ")}
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+              <Badge variant="secondary" className="text-[10px] font-mono">
                 {place.timezone}
-              </span>
+              </Badge>
             </button>
           ))}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

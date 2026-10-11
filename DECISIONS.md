@@ -96,3 +96,11 @@ Record dated choices, rejected alternatives, source and effect on requirements. 
 - **Rejected:** Free-form ungrounded LLM advice, client-driven tool definitions, cross-region inference profiles, unbounded chat histories, and failing open on counter exhaustion.
 - **Sources:** Strands agent framework documentation (https://strandsagents.com/); deployed smoke verification on 2026-10-12.
 - **MUST impact:** In-region Sydney invocation verified; zero cross-region routing.
+
+## 2026-10-12 — Migration to official shadcn/ui and Radix UI primitives
+
+- **Choice:** Migrated the frontend from custom Tailwind approximations to the official `shadcn/ui` component system. Installed `class-variance-authority`, `tailwindcss-animate`, and `@radix-ui/react-*` headless primitives (`@radix-ui/react-slot`, `@radix-ui/react-dialog`, `@radix-ui/react-tabs`, `@radix-ui/react-select`, `@radix-ui/react-accordion`, `@radix-ui/react-separator`). Created `frontend/components.json`, `frontend/src/lib/utils.ts` (`cn` helper), and official shadcn UI primitives in `frontend/src/components/ui/` (`Button`, `Card`, `Badge`, `Tabs`, `Dialog`, `Select`, `Accordion`, `Separator`). Refactored all 7 application components to compose these official primitives.
+- **Why:** Conforms strictly to the user's explicit directive to use genuine, official shadcn/ui components rather than writing custom HTML components from scratch. Radix UI primitives provide built-in WAI-ARIA accessibility (`role="tablist"`, `role="dialog"`, `role="tab"`, `data-state="open"`), keyboard navigation, focus trapping, and robust mobile touch interaction.
+- **Rejected:** Writing custom HTML modal backdrops, ad-hoc button styling without `cva` variants, and ungrounded UI abstractions.
+- **Sources:** Official shadcn/ui documentation (https://ui.shadcn.com/); Radix UI documentation (https://www.radix-ui.com/primitives); verified in live Chromium DOM on 2026-10-12.
+- **MUST impact:** None; static export compatibility preserved; zero backend changes.

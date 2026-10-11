@@ -68,6 +68,8 @@ def main():
     template = yaml.safe_load((ROOT / ".aws-sam/build/template.yaml").read_text())
     template["Resources"]["SpikeFunction"]["Properties"]["CodeUri"] = spike_uri
     template["Resources"]["BriefFunction"]["Properties"]["CodeUri"] = f"s3://{bucket}/{key}"
+    if "ChatFunction" in template["Resources"]:
+        template["Resources"]["ChatFunction"]["Properties"]["CodeUri"] = f"s3://{bucket}/{key}"
     packaged = ROOT / ".aws-sam/packaged.yaml"
     packaged.write_text(yaml.safe_dump(template, sort_keys=False))
     subprocess.run(

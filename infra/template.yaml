@@ -82,6 +82,7 @@ Resources:
           - '*'
         AllowMethods:
           - GET
+          - POST
           - OPTIONS
         AllowHeaders:
           - content-type
@@ -156,6 +157,66 @@ Resources:
             Method: GET
     Metadata:
       BuildMethod: makefile
+  ChatFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-chat'
+      CodeUri: ../backend/
+      Handler: src.handlers.chat.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 25
+      ReservedConcurrentExecutions: 2
+      Layers:
+        - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:clearclass-cedar-runtime:1'
+      Environment:
+        Variables:
+          SNAPSHOT_BUCKET: !Ref SnapshotBucket
+          COUNTERS_TABLE: !Ref CounterTable
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          PYTHONPATH: /var/task:/opt
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: ReadOnlyAirAndPolicyCache
+              Effect: Allow
+              Action:
+                - s3:GetObject
+              Resource:
+                - !Sub '${SnapshotBucket.Arn}/air/*'
+                - !Sub '${SnapshotBucket.Arn}/locations/*'
+                - !Sub '${SnapshotBucket.Arn}/policies/reference-school-activity/*'
+            - Sid: WriteAirAndLocations
+              Effect: Allow
+              Action:
+                - s3:PutObject
+              Resource:
+                - !Sub '${SnapshotBucket.Arn}/air/*'
+                - !Sub '${SnapshotBucket.Arn}/locations/*'
+            - Sid: ChargeDailyChatCounters
+              Effect: Allow
+              Action: dynamodb:UpdateItem
+              Resource: !GetAtt CounterTable.Arn
+            - Sid: InvokeSydneyModel
+              Effect: Allow
+              Action: bedrock:InvokeModel
+              Resource: !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/${BedrockModelId}'
+      Events:
+        Chat:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /schools/{id}/chat
+            Method: POST
+    Metadata:
+      BuildMethod: makefile
+  ChatLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${AWS::StackName}-chat'
+      RetentionInDays: 7
   BriefLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:

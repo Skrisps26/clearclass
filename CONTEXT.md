@@ -31,8 +31,8 @@ Code/file presence or planned architecture alone never qualifies as `verified`.
 | M2 Cedar reference/local policies and ventilation | `verified` (2026-10-11, domain gate) | Cited Cedar reference guidance and source-backed portable mass-balance tests; no invented local law or constants. | 45 tests passed: Cedar schema/forbid/allow/boundaries, stale/missing/wrong scheme, S3 invalid-revision fallback, PM/CO2 equations, model infeasibility, London DST and non-hour offsets. Real Sydney S3 revision loaded/evaluated AQI 200 sport as `modify`. Fictional case-study airflow opted in; real room without assessed airflow unavailable. M3 must wire these modules into deployed brief. |
 | M3 Deterministic daily brief | `verified` (2026-10-11) | Versioned brief combines air, policy evidence, ventilation and deterministic EN/HI messages. | 60 unit tests passed; deployed Sydney HTTP API serves full `DailyCard` with 8 cohort verdicts, rule IDs/sources, comparative ventilation schedule, and ready-to-copy bilingual EN/HI messages across Delhi, Bengaluru, London, Reykjavik and 16 scenario permutations. `CardTable` on-demand DynamoDB cache integrated. M4 next. |
 | M4 Daily card UI | `verified` (2026-10-12) | Deployed mobile/desktop card, location reset, provenance, scenario, Why and copy interactions. | Next.js 14 static export (`out/`) compiled cleanly; verified in real headless Chromium browser across live Delhi card (CAMS Global, MODIFY chip, Ref AQI 159), Hindi Devanagari toggle, Good Day deep-link (8 ALLOW badges, AQI 35), Severe Day deep-link (8 WITHHELD badges, AQI 350, coverage gap documented), and mobile viewport (390x844) with zero overflow and vertical cohort stacking. M5 next. |
-| M5 Strands chat | `in_progress` | Bounded bilingual chat grounded in the same school/location/time/card; caps and failure paths proven. | API route, tool definitions, and Sydney Nova Micro invocation under development. |
-| M6 P1 editor/scheduler/rooms | `not_started` (conditional after P0) | Protected pack-aware editor, school-local scheduling and classroom configuration. | No P1 work exists. |
+| M5 Strands chat | `verified` (2026-10-12) | Bounded bilingual chat grounded in the same school/location/time/card; caps and failure paths proven. | 65 backend unit tests passed; deployed `ChatFunction` in Sydney with `bedrock:InvokeModel` for Sydney `amazon.nova-micro-v1:0`; `scripts/smoke_chat.py` verified English and Devanagari Hindi grounding, Cedar tool execution, and error boundaries on `POST /schools/{id}/chat`; browser UI tested end to end. All P0 outcomes verified! |
+| M6 P1 editor/scheduler/rooms | `not_started` (conditional after P0) | Protected pack-aware editor, school-local scheduling and classroom configuration. | P0 complete; P1 next. |
 | M7 P2 observability/CADR | `not_started` (conditional after P1) | Optional sourced work only after P0/P1/submission readiness. | No P2 work exists. |
 | M8 Submission | `not_started` | Clean-browser deployed smoke, actual README/demo/blog artifacts, public URLs and resource/cost handoff. | Public repo has tested M0 code only; no public application URL, video or blog. |
 
@@ -97,7 +97,7 @@ Partial selected-service pre-deployment inventory checked 2026-10-10: CloudForma
 
 | Stack/resource | Region | Name/ID | URL | Status | Last verified |
 | --- | --- | --- | --- | --- | --- |
-| `clearclass` | `ap-southeast-2` | Lambda `clearclass-spike`, `clearclass-brief`, HTTP API, private versioned cache S3 bucket, DynamoDB tables (`CounterTable`, `CardTable`), Lambda layer `clearclass-cedar-runtime:1`, IAM roles, 7-day log groups | https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com | `UPDATE_COMPLETE`; live four-place M3 smoke passed with 8 verdicts, comparative ventilation, bilingual parent messages; M0 Cedar/model smoke passed | 2026-10-11T17:48Z |
+| `clearclass` | `ap-southeast-2` | Lambda `clearclass-spike`, `clearclass-brief`, `clearclass-chat`, HTTP API, private versioned cache S3 bucket, DynamoDB tables (`CounterTable`, `CardTable`), Lambda layer `clearclass-cedar-runtime:1`, IAM roles, 7-day log groups | https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com | `UPDATE_COMPLETE`; all P0 routes verified: four-place M3 brief, 16 scenarios, Cedar verdicts, ventilation, bilingual parent messages, and Strands Bedrock chat | 2026-10-12T00:35Z |
 | SAM-managed artifact stack | `ap-southeast-2` | bucket `aws-sam-cli-managed-default-samclisourcebucket-zy8sytzlsrsu` | internal only | Retained for reproducible deploys | 2026-10-11 |
 
 | Timestamp | Source | Spend so far | Credits remaining | Billing lag / caveat |
@@ -170,6 +170,16 @@ Partial selected-service pre-deployment inventory checked 2026-10-10: CloudForma
   4. Mobile viewport (390x844) verified: `horizontal overflow: false`, cohort cards stacked vertically with full touch accessibility.
   5. Sourced disclosures: Expandable Cedar rule `@id` & primary source links, differential mass-balance equations, and one-click clipboard copy for EN/HI parent circulars.
 
+
+### 2026-10-12 — M5 bounded Strands chat and P0 end-to-end verification
+
+- **Module/files:** `backend/src/domain/chat.py`, `backend/src/handlers/chat.py`, `backend/tests/test_chat.py`, `infra/template.yaml`, `backend/Makefile`, `scripts/deploy_air.py`, `scripts/smoke_chat.py`, `frontend/src/components/GroundedChat.tsx`, `frontend/src/app/page.tsx`, `frontend/src/lib/api.ts`, `DECISIONS.md`.
+- **Commands/results:** 65 backend unit tests passed via `.venv/bin/python -m unittest discover -s backend/tests -v`. Deployed `ChatFunction` and `ChatLogGroup` to Sydney stack with `amazon.nova-micro-v1:0` IAM policy; package built to 0.20 MB and deployed via `scripts/deploy_air.py`.
+- **Deployed API evidence:** `.venv/bin/python scripts/smoke_chat.py` executed live `POST /schools/delhi-demo/chat` against Sydney Bedrock endpoint:
+  1. English query on `good-day`: verified tool execution returning AQI 35 and allowing physical education (PE) without modification.
+  2. Hindi query on `very-poor-day`: verified tool execution returning AQI 200 and mandating modifications (अधिक विराम दें, कम तीव्रता रखें) in natural Hindi.
+  3. Error boundaries: empty body (400), empty message (400), unknown school (404), and invalid scenario (400) all verified.
+  4. In-browser integration: `GroundedChat` tested in headless Chromium tab; user prompt "Can students do physical education (PE) outside this morning?" submitted and grounded assistant reply rendered live in the conversation stream. All P0 deliverables complete and verified!
 ## Update protocol
 
 For each session/milestone append a dated entry with: milestone, changed files, exact commands and input scenario, observed result, deployed stack/URL/Region, test or browser evidence, commit hash/push result, spend/remaining-credit source/time/lag, decisions/deviations, blockers and next command. Update only statuses supported by new evidence. Report the real deployed inventory before/after sessions and major deploys. Never mark implementation verified from a plan, mock, config file, background job or stale historical CLI output alone.

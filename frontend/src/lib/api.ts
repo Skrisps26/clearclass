@@ -52,3 +52,42 @@ export async function fetchBrief(
   const json = await res.json();
   return DailyCardSchema.parse(json);
 }
+
+export async function sendChatMessage(
+  schoolId: string,
+  message: string,
+  locationId?: number,
+  scenario?: string | null,
+  language: "en" | "hi" = "en",
+  history?: Array<{ role: string; content: string }>
+): Promise<{ reply: string; modelId: string; status: string }> {
+  const url = `${API_BASE_URL}/schools/${encodeURIComponent(schoolId)}/chat`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      message,
+      locationId,
+      scenario,
+      language,
+      history,
+    }),
+  });
+  if (!res.ok) {
+    const errorBody: unknown = await res.json().catch(() => ({}));
+    const errorMessage =
+      errorBody && typeof errorBody === "object" && "error" in errorBody && typeof errorBody.error === "string"
+        ? errorBody.error
+        : `HTTP ${res.status} error from chat API`;
+    throw new Error(errorMessage);
+  }
+  const json: unknown = await res.json();
+  if (json && typeof json === "object" && "reply" in json && typeof json.reply === "string") {
+    return {
+      reply: json.reply,
+      modelId: "modelId" in json && typeof json.modelId === "string" ? json.modelId : "amazon.nova-micro-v1:0",
+      status: "status" in json && typeof json.status === "string" ? json.status : "success",
+    };
+  }
+  throw new Error("Malformed chat response");
+}

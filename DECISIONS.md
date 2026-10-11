@@ -88,3 +88,11 @@ Record dated choices, rejected alternatives, source and effect on requirements. 
 - **Rejected:** Server actions, request-dependent server routes, default Next.js image optimization in the static path, storing API keys in the client bundle, and relying on color alone for allow/modify/deny decisions.
 - **Sources:** Next.js static export documentation (https://nextjs.org/docs/app/guides/static-exports); verified browser execution on 2026-10-12.
 - **MUST impact:** Zero server-side state in frontend; all domain logic executed in Sydney.
+
+## 2026-10-12 — Grounded conversational agent with Bedrock Nova Micro
+
+- **Choice:** Deployed `ChatFunction` in `ap-southeast-2` executing `POST /schools/{id}/chat` powered by Strands and `amazon.nova-micro-v1:0` (`max_tokens: 512`, `temperature: 0`). Closed over 4 server-side tools (`get_school_profile`, `get_air_quality`, `evaluate_policy`, `plan_ventilation`). Bounded history to 6 turns; enforced daily rate limits via `CounterTable`; stripped internal thinking tags before client delivery; and provided deterministic grounded fallback if the model times out or errors. Integrated `GroundedChat` component into frontend card view.
+- **Why:** Follows the product invariant: "Rules and physics decide; the LLM explains, translates, and converses." The LLM cannot hallucinate arbitrary activity clearance because all recommendations evaluate actual Cedar policies and physical mass-balance models via server-side tools. Clean English and Devanagari Hindi responses verified in production against Sydney Bedrock endpoint.
+- **Rejected:** Free-form ungrounded LLM advice, client-driven tool definitions, cross-region inference profiles, unbounded chat histories, and failing open on counter exhaustion.
+- **Sources:** Strands agent framework documentation (https://strandsagents.com/); deployed smoke verification on 2026-10-12.
+- **MUST impact:** In-region Sydney invocation verified; zero cross-region routing.

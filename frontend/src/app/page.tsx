@@ -7,6 +7,7 @@ import { ActionGuidance } from "../components/ActionGuidance";
 import { VentilationCard } from "../components/VentilationCard";
 import { ForecastChart } from "../components/ForecastChart";
 import { ParentMessages } from "../components/ParentMessages";
+import { GroundedChat } from "../components/GroundedChat";
 import { fetchSchools, fetchBrief } from "../lib/api";
 import { DailyCard, CardLocation, SchoolTemplate } from "../types/card";
 import { Loader2, AlertCircle, RefreshCw, Sparkles, ExternalLink } from "lucide-react";
@@ -215,6 +216,14 @@ function ClearClassApp() {
               policySetVersion={card.policySetVersion}
               policySources={card.policySources}
               regulatoryCoverage={card.regulatoryCoverage}
+              language={language}
+            />
+
+            {/* 2. Grounded Conversational Assistant (Strands + Nova Micro) */}
+            <GroundedChat
+              schoolId={selectedSchool}
+              locationId={card.location.id}
+              scenario={selectedScenario}
               language={language}
             />
 

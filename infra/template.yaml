@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: ClearClass single Sydney stack — M0 packaging spike, expanded by later milestones
+Description: ClearClass single Sydney application stack
 Parameters:
   BedrockModelId:
     Type: String
@@ -30,6 +30,110 @@ Resources:
               Effect: Allow
               Action: bedrock:InvokeModel
               Resource: !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/${BedrockModelId}'
+  SnapshotBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  CounterTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+  PublicApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: '$default'
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 5
+        ThrottlingRateLimit: 2
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowMethods:
+          - GET
+          - OPTIONS
+        AllowHeaders:
+          - content-type
+  BriefFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${AWS::StackName}-brief'
+      CodeUri: ../backend/
+      Handler: src.handlers.brief.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Timeout: 20
+      ReservedConcurrentExecutions: 3
+      Environment:
+        Variables:
+          SNAPSHOT_BUCKET: !Ref SnapshotBucket
+          COUNTERS_TABLE: !Ref CounterTable
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Sid: ReadWriteOnlyAirCache
+              Effect: Allow
+              Action:
+                - s3:GetObject
+                - s3:PutObject
+              Resource:
+                - !Sub '${SnapshotBucket.Arn}/air/*'
+                - !Sub '${SnapshotBucket.Arn}/locations/*'
+                - !Sub '${SnapshotBucket.Arn}/search/*'
+            - Sid: DistinguishMissingCacheObjects
+              Effect: Allow
+              Action: s3:ListBucket
+              Resource: !GetAtt SnapshotBucket.Arn
+            - Sid: ChargeDailyCounters
+              Effect: Allow
+              Action: dynamodb:UpdateItem
+              Resource: !GetAtt CounterTable.Arn
+      Events:
+        Locations:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /locations
+            Method: GET
+        Schools:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /schools
+            Method: GET
+        Brief:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref PublicApi
+            Path: /schools/{id}/brief
+            Method: GET
+    Metadata:
+      BuildMethod: makefile
+  BriefLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${AWS::StackName}-brief'
+      RetentionInDays: 7
   SpikeLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -38,3 +142,5 @@ Resources:
 Outputs:
   SpikeFunctionName:
     Value: !Ref SpikeFunction
+  ApiUrl:
+    Value: !Sub 'https://${PublicApi}.execute-api.${AWS::Region}.amazonaws.com'

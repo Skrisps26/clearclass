@@ -27,7 +27,7 @@ Code/file presence or planned architecture alone never qualifies as `verified`.
 | ID | Status | Acceptance gate | Evidence / next action |
 | --- | --- | --- | --- |
 | M0 Setup and packaging spike | `verified` (2026-10-10) | Verify official skill discovery/MCP fallback, current credentials/access, repository/cost gates; prove Cedar+schema+Strands+Bedrock in real Lambda. | `sam validate --lint` and Python 3.12 SAM build succeeded; deployed `clearclass-spike` in Sydney. `.venv/bin/python scripts/smoke_spike.py` returned real Cedar schema permit/forbid/default-deny; `--model` returned `ready` through Strands+Sydney Nova Micro. M1 next. |
-| M1 Place and air-data slice | `not_started` | Deployed place selection and global model forecast/cache/scenario work for seeded and unseeded place; failure never cross-leaks locations. | No application files/deployment/URL established. |
+| M1 Place and air-data slice | `verified` (2026-10-11) | Deployed place selection and global model forecast/cache/scenario work for seeded and unseeded place; failure never cross-leaks locations. | Public [Sydney API](https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com) smoke returned CAMS Global snapshots for Delhi, Bengaluru, London and search-only Reykjavik (IDs 1273294/1277333/2643743/3413829), 16 synthetic cards, metadata/errors; 25 domain/route tests include same-place stale fallback. M2 next. |
 | M2 Cedar reference/local policies and ventilation | `not_started` | Cited Cedar reference guidance and source-backed portable mass-balance tests; no invented local law or constants. | Current CAQM clauses and ventilation constants not verified. |
 | M3 Deterministic daily brief | `not_started` | Versioned brief combines air, policy evidence, ventilation and deterministic EN/HI messages. | No API/card exists. |
 | M4 Daily card UI | `not_started` | Deployed mobile/desktop card, location reset, provenance, scenario, Why and copy interactions. | No UI exists. |
@@ -76,10 +76,10 @@ Sources: [Open-Meteo geocoding](https://open-meteo.com/en/docs/geocoding-api), [
 | --- | --- | --- |
 | Git repository/remote/owner | `public main pushed` | User authorized https://github.com/Skrisps26/clearclass; tested M0 source committed `c81a617bad57c12158017529749b4a19230412e5` and pushed to `main` 2026-10-10 after staged-file/secret scan. `CLAUDE.md` and `.mcp.json` deliberately excluded from public commit. |
 | Exact event deadline/timezone | `unknown` | [Official rules](https://www.wemakedevs.org/aws/rules) require submission before deadline on event page/form; its clock time/timezone did not appear in accessible page text. Video must be uploaded to YouTube, public/unlisted, under three minutes; public repo and short writeup required. |
-| Current AWS credentials/service permissions | `partially verified` | STS succeeded 2026-10-10; specific CloudFormation/Lambda/Bedrock invoke/IAM permissions unproven. |
+| Current AWS credentials/service permissions | `verified for M0/M1 paths` | STS, CloudFormation, Lambda, Bedrock invoke, S3, DynamoDB and HTTP API paths succeeded 2026-10-10/11; later services still unverified. |
 | Current skill discovery/MCP connection | `partially verified` | Locally installed skills read; OMP MCP tools are not exposed in this session, so CLI plus official skills/docs is the documented fallback. Config alone is not connection evidence. |
-| Bedrock model in-region access | `approved alternative; invocation pending` | User prefers Claude but approves a working alternative given known cross-Region Claude profiles. Sydney-only on-demand `amazon.nova-micro-v1:0` is configured for the M0 spike; actual access/invocation pending. |
-| Account plan, remaining credits, AWS spend limit and deployed inventory | `partially verified` | `get-account-plan-state` returned active FREE/$100 remaining credits 2026-10-10; human waived spend-limit requirement. CloudFormation/Lambda/API Gateway/DynamoDB/S3 initial queries empty but are not a complete inventory. |
+| Bedrock model in-region access | `approved alternative; invocation verified` | User prefers Claude but approved a working alternative given known cross-Region Claude profiles. Sydney-only `amazon.nova-micro-v1:0` returned `ready` in deployed M0 Strands spike 2026-10-10. |
+| Project plan, remaining credits and deployed inventory | `partially verified` | `get-account-plan-state` returned ACTIVE FREE/$120 remaining 2026-10-11T13:43Z; actual spend unknown. One app stack and one SAM-managed artifact stack; selected-service inventory only, not complete. Human waived spend-limit requirement. |
 | Email budget alert | `not configured/verified; user waived gate` | No visible budget details in CLI; user said a spend limit was not required. Recommend an email alert later; do not claim one exists. |
 | Deployment cost envelope | `authorized bounded spend` | User explicitly waived requiring spend limit/email alert, asked not to exhaust credits. Retain earlier $5 development-spend review target (not hard cap), check credits/inventory after deployment and stop on unexpected burn. |
 | Open-Meteo commercial-use classification | `conditional non-commercial demo` | Current ad-free educational hackathon demo fits examples in provider terms; do not add subscriptions/ads/promotion. Reassess before commercial use; attribution and request caps required. |
@@ -93,17 +93,17 @@ Do not store passwords, keys, authorization headers or personal email addresses 
 
 ## Resource and cost inventory
 
-Partial read-only inventory checked 2026-10-10: CloudFormation stacks, Lambda functions, API Gateway HTTP APIs, DynamoDB tables and S3 buckets returned `[]`. Other resources/global-service inventory was not checked. **Partial absence does not prove a completely empty project.**
+Partial selected-service pre-deployment inventory checked 2026-10-10: CloudFormation stacks, Lambda functions, API Gateway HTTP APIs, DynamoDB tables and S3 buckets returned `[]`. 2026-10-11 `clearclass` stack-resource inventory lists two Lambda functions, their IAM roles/log groups, one private S3 bucket, one on-demand DynamoDB table and one HTTP API/stage with permissions. SAM-managed artifact stack/bucket remain. **This does not prove a complete project inventory.**
 
 | Stack/resource | Region | Name/ID | URL | Status | Last verified |
 | --- | --- | --- | --- | --- | --- |
-| `clearclass` | `ap-southeast-2` | Lambda `clearclass-spike`, IAM role, 7-day log group | no public URL yet | `CREATE_COMPLETE`, Cedar/Bedrock Lambda smoke passed | 2026-10-10T21:26Z |
-| SAM-managed artifact stack | `ap-southeast-2` | bucket `aws-sam-cli-managed-default-samclisourcebucket-zy8sytzlsrsu` | internal only | Created by `sam deploy --resolve-s3`; inspect/retain for future deploys | 2026-10-10 |
-| ClearClass public application | `ap-southeast-2` | API/frontend not deployed yet | none | `not_started` | 2026-10-10 |
+| `clearclass` | `ap-southeast-2` | Lambda `clearclass-spike`, `clearclass-brief`, HTTP API, private versioned cache S3 bucket, DynamoDB counter table, IAM roles, 7-day log groups | https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com | `UPDATE_COMPLETE`; real four-place M1 smoke passed; Cedar/model M0 smoke passed | 2026-10-11T13:43Z |
+| SAM-managed artifact stack | `ap-southeast-2` | bucket `aws-sam-cli-managed-default-samclisourcebucket-zy8sytzlsrsu` | internal only | Retained for reproducible deploys | 2026-10-11 |
 
 | Timestamp | Source | Spend so far | Credits remaining | Billing lag / caveat |
 | --- | --- | --- | --- | --- |
 | 2026-10-10T21:26Z | `aws freetier get-account-plan-state` | `unknown` (not $0; billing lag) | $100 reported remaining, active FREE plan | Unchanged credit report shortly after deploy does not prove zero cost. $5 operational review target, not hard cap. |
+| 2026-10-11T13:43Z | `aws freetier get-account-plan-state` | `unknown` (not $0; billing lag) | $120 reported remaining, active FREE plan | Increased from earlier $100 report; not evidence of a spend refund or $0 spend. $5 review target, not hard cap. |
 
 ## Session and milestone log (append-only)
 
@@ -135,6 +135,14 @@ Partial read-only inventory checked 2026-10-10: CloudFormation stacks, Lambda fu
 - **Resources:** `clearclass` CloudFormation status `CREATE_COMPLETE` with Lambda `clearclass-spike` and no public URL. Managed SAM artifact bucket `aws-sam-cli-managed-default-samclisourcebucket-zy8sytzlsrsu`. Initial inventory was empty for selected services; post-deploy stack resources list has Lambda, IAM role and log group. Avoid deleting resources without user approval.
 - **Credits/spend:** Free plan returned $100 remaining at 2026-10-10T21:26Z, unchanged shortly after deployment; actual spend unknown due billing lag. User waived budget/spend-limit prerequisite but requested bounded usage; $5 review target retained.
 - **Git:** first commit `c81a617bad57c12158017529749b4a19230412e5` (“Prove Cedar and Strands in Sydney Lambda”) pushed to `main` at https://github.com/Skrisps26/clearclass. Before commit, staged filenames were inspected, staged content scanned for private keys, AWS/GitHub tokens and project identifier with no findings; `git diff --cached --check` returned 0. `CLAUDE.md` and `.mcp.json` were not staged. Next: M1 global place/air path.
+
+### 2026-10-11 — M1 deployed place and forecast slice
+
+- **Module/files:** `backend/src/domain/{models,air,scenarios,storage,limits}.py`, `backend/src/handlers/brief.py`, `backend/requirements-brief.txt`, `backend/Makefile`, unit tests, `infra/template.yaml`, `scripts/{deploy_air,smoke_air}.py`, `DECISIONS.md`. Shared Python 3.12 domain reused by both functions; BriefFunction built from pinned lean dependencies.
+- **Commands/results:** `.venv/bin/python -m unittest discover -s backend/tests -v` passed 25 tests (including same-place stale cache, search ambiguity, Delhi/London DST, non-hour offset, synthetic reproducibility). SAM build and `sam validate --lint` passed. Two ~34 MB uploads and 5 MiB multipart parts timed out; reduced brief ZIP to 3,627,403 bytes and single S3 PUT succeeded. Deployed `clearclass` stack update. First public smoke showed 503 due S3 missing-key 403 without bucket-list permission; added `s3:ListBucket` to brief role on its dedicated private bucket, redeployed template, reran full public smoke successfully.
+- **Deployed API evidence:** `.venv/bin/python scripts/smoke_air.py` returned Delhi 1273294 grid (28.700005,77.20001), Bengaluru 1277333 (13.0,77.600006), London 2643743 (51.5,-0.099990845), and unseeded Reykjavik 3413829 (64.100006,-21.899994), all `modelled` for local 2026-10-11. All four named synthetic scenarios returned for each, using local date 2026-10-10; empty search and malformed/unknown school/scenario/location IDs returned expected results/statuses. API URL: https://04ixg1iqd4.execute-api.ap-southeast-2.amazonaws.com. This is a deterministic air-data slice, **not yet policy/ventilation advice**.
+- **Resources/spend:** Sydney stack inventory as above; no always-on compute. ACTIVE FREE plan reported $120 remaining 2026-10-11T13:43Z; actual spend unknown due billing lag, not $0. User waived budget-alert gate, $5 review target retained.
+- **Git:** pending M1 staged-content secret scan, commit and push; record hash after completion. **Next:** M2 sourced Cedar reference rules and ventilation; CAQM local overlay remains disabled until current operative text verified.
 
 ## Update protocol
 
